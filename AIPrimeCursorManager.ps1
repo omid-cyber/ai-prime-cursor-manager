@@ -254,10 +254,28 @@ function Get-LocalizedText([string]$Text, [string]$Language) {
             return $english
         }
         foreach ($languageValue in $values.PSObject.Properties) {
-            if ($Text -eq [string]$languageValue.Value) {
+            $sourceTemplate = [string]$languageValue.Value
+            if ($Text -eq $sourceTemplate) {
                 $target = $values.PSObject.Properties[$Language]
                 if ($target) { return [string]$target.Value }
                 return $english
+            }
+            # Dynamic status text can be switched between languages without losing its value.
+            if ($sourceTemplate.Contains('$')) {
+                $sourceMarker = $sourceTemplate.IndexOf('$')
+                $sourcePrefix = $sourceTemplate.Substring(0, $sourceMarker)
+                $sourceTail = $sourceTemplate.Substring($sourceMarker)
+                $simpleVariable = ($sourceTail -match '^\$[A-Za-z_]\w*$') -or ($sourceTail -match '^\$\(.+\)$')
+                if ($simpleVariable -and $sourcePrefix.Length -gt 0 -and $Text.StartsWith($sourcePrefix, [System.StringComparison]::Ordinal)) {
+                    $target = $values.PSObject.Properties[$Language]
+                    if ($target) {
+                        $targetTemplate = [string]$target.Value
+                        $targetMarker = $targetTemplate.IndexOf('$')
+                        if ($targetMarker -ge 0) {
+                            return $targetTemplate.Substring(0, $targetMarker) + $Text.Substring($sourcePrefix.Length)
+                        }
+                    }
+                }
             }
         }
     }
