@@ -1,4 +1,4 @@
-#requires -Version 5.1
+﻿#requires -Version 5.1
 # AI Prime Cursor Manager - Windows PowerShell/WPF, no third-party packages required.
 # API keys are not written to logs. The upstream key is saved only when the user opts in,
 # encrypted with Windows DPAPI for the current Windows account.
