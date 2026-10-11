@@ -43,11 +43,58 @@ try {
     }
     $pattern = '(?s)\$xaml\s*=\s*@''\r?\n(.*?)\r?\n''@'
     $match = [regex]::Match($source, $pattern)
-    if (-not $match.Success) { throw 'Could not locate the XAML here-string in AIPrimeCursorManager.ps1.' }
+    $xmlText = $null
+    if ($match.Success) {
+        $xmlText = $match.Groups[1].Value
+    } else {
+        $base64Match = [regex]::Match($source, '(?m)^\$xamlBase64\s*=\s*''([A-Za-z0-9+/=]+)''\s*
+
+    $xNs = 'http://schemas.microsoft.com/winfx/2006/xaml'
+    $presentationNs = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
+
+    $seenNames = @{}
+    foreach ($node in $xml.GetElementsByTagName('*')) {
+        $name = $node.GetAttribute('Name', $xNs)
+        if (-not [string]::IsNullOrWhiteSpace($name)) {
+            if ($seenNames.ContainsKey($name)) { throw "Duplicate x:Name in XAML: $name" }
+            $seenNames[$name] = $true
+        }
+    }
+
+    $seenStyles = @{}
+    foreach ($style in $xml.GetElementsByTagName('Style', $presentationNs)) {
+        $target = $style.GetAttribute('TargetType')
+        $key = $style.GetAttribute('Key', $xNs)
+        if (-not [string]::IsNullOrWhiteSpace($target) -and [string]::IsNullOrWhiteSpace($key)) {
+            if ($seenStyles.ContainsKey($target)) { throw "Duplicate implicit WPF Style resource for TargetType '$target'. This causes ResourceDictionary startup failure." }
+            $seenStyles[$target] = $true
+        }
+    }
+
+    $bindingMatch = [regex]::Match($source, '(?s)\$controlNames\s*=\s*@\((.*?)\r?\n\)')
+    if (-not $bindingMatch.Success) { throw 'Could not locate the named-control binding list.' }
+    $controlNames = [regex]::Matches($bindingMatch.Groups[1].Value, "'([^']+)'") | ForEach-Object { $_.Groups[1].Value }
+    foreach ($controlName in $controlNames) {
+        if (-not $seenNames.ContainsKey($controlName)) { throw "Control binding '$controlName' has no matching x:Name in XAML." }
+    }
+
+    Write-Host "PASS: XAML is well-formed XML." -ForegroundColor Green
+    Write-Host "PASS: $($seenNames.Count) unique x:Name controls." -ForegroundColor Green
+    Write-Host "PASS: $($seenStyles.Count) unique implicit WPF styles; no duplicate TargetType keys." -ForegroundColor Green
+    Write-Host "PASS: $($controlNames.Count) bound control names resolve." -ForegroundColor Green
+    exit 0
+}
+catch {
+    Write-Host "XAML preflight FAILED: $($_.Exception.Message)" -ForegroundColor Red
+    exit 1
+})
+        if (-not $base64Match.Success) { throw 'Could not locate embedded XAML or its Base64 payload.' }
+        $xmlText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Match.Groups[1].Value))
+    }
 
     $xml = New-Object System.Xml.XmlDocument
     $xml.PreserveWhitespace = $false
-    $xml.LoadXml($match.Groups[1].Value)
+    $xml.LoadXml($xmlText)
 
     $xNs = 'http://schemas.microsoft.com/winfx/2006/xaml'
     $presentationNs = 'http://schemas.microsoft.com/winfx/2006/xaml/presentation'
