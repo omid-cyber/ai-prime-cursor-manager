@@ -12,7 +12,7 @@ const uiXaml = xamlBase64Match
   : (legacyXamlMatch?.[1] ?? ui);
 const bridge = fs.readFileSync(path.join(root, 'bridge', 'server.mjs'), 'utf8');
 const checks = [
-  ['v1.7 version banner in UI', () => assert.match(ui, /v1\.7 · Backward-compatible tunnel state/)],
+  ['v1.7 version banner in UI', () => assert.match(uiXaml, /v1\.7 · Backward-compatible tunnel state/)],
   ['temporary cloudflared filename ends in .exe', () => assert.match(helper, /cloudflared\.download\.exe/)],
   ['obsolete .exe.download path absent', () => assert.doesNotMatch(helper, /\$tempExe\s*=\s*"\$exe\.download"/)],
   ['download reports actual byte progress', () => assert.match(helper, /\$received \+= \$read/)],
