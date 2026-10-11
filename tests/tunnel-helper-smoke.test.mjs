@@ -11,7 +11,33 @@ const uiXaml = xamlBase64Match
   ? Buffer.from(xamlBase64Match[1], 'base64').toString('utf8')
   : (legacyXamlMatch?.[1] ?? ui);
 const bridge = fs.readFileSync(path.join(root, 'bridge', 'server.mjs'), 'utf8');
+const translationBase64Match = ui.match(/^\$script:UiTranslationsBase64\s*=\s*'([A-Za-z0-9+/=]+)'\s*$/m);
+const uiTranslations = translationBase64Match
+  ? JSON.parse(Buffer.from(translationBase64Match[1], 'base64').toString('utf8'))
+  : {};
 const checks = [
+  ['language selector contains English, Estonian, French and German', () => {
+    assert.match(uiXaml, /x:Name="LanguageCombo"/);
+    for (const code of ['en', 'et', 'fr', 'de']) assert.ok(uiXaml.includes('Tag="' + code + '"'));
+  }],
+  ['localization dictionary provides all four languages', () => {
+    assert.ok(Object.keys(uiTranslations).length >= 100);
+    for (const key of ['Dashboard', 'Cloudflare Tunnel', 'Settings saved']) {
+      assert.ok(uiTranslations[key], 'missing translation key: ' + key);
+      for (const code of ['en', 'et', 'fr', 'de']) assert.equal(typeof uiTranslations[key][code], 'string');
+    }
+    assert.notEqual(uiTranslations.Dashboard.et, uiTranslations.Dashboard.en);
+    assert.notEqual(uiTranslations.Dashboard.fr, uiTranslations.Dashboard.en);
+    assert.notEqual(uiTranslations.Dashboard.de, uiTranslations.Dashboard.en);
+  }],
+  ['language choice persists in settings and selection event', () => {
+    assert.match(ui, /Language = 'en'/);
+    assert.ok(ui.includes("'ApiBaseUrl','Model','Port','Language','RememberApiKey'"));
+    assert.ok(ui.includes('Language = [string]$script:CurrentSettings.Language'));
+    assert.ok(ui.includes('LanguageCombo.Add_SelectionChanged'));
+    assert.ok(ui.includes('Set-UiLanguage $chosenLanguage'));
+  }],
+
   ['v1.7 version banner in UI', () => assert.match(uiXaml, /v1\.7 · Backward-compatible tunnel state/)],
   ['temporary cloudflared filename ends in .exe', () => assert.match(helper, /cloudflared\.download\.exe/)],
   ['obsolete .exe.download path absent', () => assert.doesNotMatch(helper, /\$tempExe\s*=\s*"\$exe\.download"/)],
