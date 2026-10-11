@@ -113,7 +113,7 @@ jobs:
       - name: Upload source bundle artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ai-prime-cursor-manager-source-\${{ github.sha }}
+          name: ai-prime-cursor-manager-source-${{ github.sha }}
           path: AI-Prime-Cursor-Manager-source.zip
           if-no-files-found: error
           retention-days: 14
