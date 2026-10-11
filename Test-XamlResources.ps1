@@ -17,11 +17,17 @@ try {
         $longStringTokens = @($tokens | Where-Object {
             $_.Kind.ToString() -match 'String' -and $_.Extent.EndLineNumber -gt $_.Extent.StartLineNumber
         })
-        foreach ($t in $longStringTokens) {
+        $debugTokens = @($tokens | Where-Object {
+            $_.Kind.ToString() -match 'String' -and (
+                ($_.Extent.StartLineNumber -ge 400 -and $_.Extent.StartLineNumber -le 530) -or
+                $_.Extent.EndLineNumber -gt $_.Extent.StartLineNumber
+            )
+        })
+        foreach ($t in $debugTokens) {
             $preview = [string]$t.Extent.Text
             $preview = $preview -replace '[\r\n]+', ' '
-            if ($preview.Length -gt 220) { $preview = $preview.Substring(0, 220) }
-            Write-Host ("STRING TOKEN {0} starts={1} ends={2} chars={3} text={4}" -f $t.Kind, $t.Extent.StartLineNumber, $t.Extent.EndLineNumber, $t.Extent.Text.Length, $preview) -ForegroundColor Yellow
+            if ($preview.Length -gt 160) { $preview = $preview.Substring(0, 160) }
+            Write-Host ("STRING TOKEN {0} {1}:{2}-{3}:{4} chars={5} text={6}" -f $t.Kind, $t.Extent.StartLineNumber, $t.Extent.StartColumnNumber, $t.Extent.EndLineNumber, $t.Extent.EndColumnNumber, $t.Extent.Text.Length, $preview) -ForegroundColor Yellow
         }
         $lines = $source -split "\r?\n"
         $details = foreach ($e in $parseErrors) {
