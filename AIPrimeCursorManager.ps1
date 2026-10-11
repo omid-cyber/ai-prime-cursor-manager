@@ -1168,7 +1168,7 @@ finally {
 }
 
 # Bind named controls to script scope for predictable event handlers.
-$controlNames = @('MainTabs','OverallStatus','ApiStatusCard','BridgeStatusCard','BridgePortCard','AliasCard','ApiBaseUrlBox','ApiKeyBox','RememberKeyCheck','ModelCombo','ModelCountLabel','ModelRecommendationText','ApiTestResultText','StrongestModelButton','TestApiButton','FetchModelsButton','SaveSettingsButton','ForgetKeyButton','PortBox','StartBridgeButton','StopBridgeButton','TestBridgeButton','OpenCursorSetupButton','CursorBaseLabel','CursorKeyPassword','CursorKeyRevealBox','RevealKeyButton','CopyKeyButton','CursorModelLabel','CopyBaseButton','CopyModelButton','CopyAllButton','CopyJsonButton','LogBox','RefreshLogsButton','ExportLogsButton','ClearLogsButton','SettingsPathLabel','ManagerLogPathLabel','BridgeScriptPathLabel','SaveSettingsButton2','OpenDataFolderButton','OpenScriptFolderButton','FooterStatus','TunnelStatusCard','TunnelProgressBar','TunnelProgressText','TunnelUrlBox','TunnelBaseUrlBox','StartTunnelButton','StopTunnelButton','CopyTunnelUrlButton','CopyTunnelBaseButton')
+$controlNames = "MainTabs|OverallStatus|ApiStatusCard|BridgeStatusCard|BridgePortCard|AliasCard|ApiBaseUrlBox|ApiKeyBox|RememberKeyCheck|ModelCombo|ModelCountLabel|ModelRecommendationText|ApiTestResultText|StrongestModelButton|TestApiButton|FetchModelsButton|SaveSettingsButton|ForgetKeyButton|PortBox|StartBridgeButton|StopBridgeButton|TestBridgeButton|OpenCursorSetupButton|CursorBaseLabel|CursorKeyPassword|CursorKeyRevealBox|RevealKeyButton|CopyKeyButton|CursorModelLabel|CopyBaseButton|CopyModelButton|CopyAllButton|CopyJsonButton|LogBox|RefreshLogsButton|ExportLogsButton|ClearLogsButton|SettingsPathLabel|ManagerLogPathLabel|BridgeScriptPathLabel|SaveSettingsButton2|OpenDataFolderButton|OpenScriptFolderButton|FooterStatus|TunnelStatusCard|TunnelProgressBar|TunnelProgressText|TunnelUrlBox|TunnelBaseUrlBox|StartTunnelButton|StopTunnelButton|CopyTunnelUrlButton|CopyTunnelBaseButton".Split("|")
 foreach ($name in $controlNames) { Set-Variable -Name $name -Value $script:Window.FindName($name) -Scope Script }
 
 Load-Settings
@@ -1336,12 +1336,13 @@ $script:CopyAllButton.Add_Click({
     try { Copy-Text $text 'Cursor setup summary' } catch { }
 })
 $script:CopyJsonButton.Add_Click({
-    $json = [ordered]@{
-        'note' = 'Informational only: bridge is configured in Cursor Settings Models, not as an MCP server.'
-        'baseUrl' = $script:CursorBaseLabel.Text
-        'model' = $script:CursorModelLabel.Text
-    } | ConvertTo-Json -Depth 3
-    try { Copy-Text $json 'Bridge configuration information' } catch { }
+    $jsonObject = [pscustomobject]@{
+        note = "Informational only: bridge is configured in Cursor Settings Models, not as an MCP server."
+        baseUrl = [string]$script:CursorBaseLabel.Text
+        model = [string]$script:CursorModelLabel.Text
+    }
+    $json = $jsonObject | ConvertTo-Json -Depth 3
+    try { Copy-Text $json "Bridge configuration information" } catch { }
 })
 $script:RefreshLogsButton.Add_Click({ Refresh-LogView })
 $script:ClearLogsButton.Add_Click({
@@ -1405,7 +1406,7 @@ $script:Window.Add_Closing({
     try { Save-SettingsFromUi } catch { }
     if (Test-BridgeRunning) {
         try { $script:BridgeProcess.Kill(); [void]$script:BridgeProcess.WaitForExit(3000) } catch { }
-        Write-AppLog 'Manager closing; local bridge stopped.'
+        Write-AppLog "Manager closing; local bridge stopped."
     }
 })
 
