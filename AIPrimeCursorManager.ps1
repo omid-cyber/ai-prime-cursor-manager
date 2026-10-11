@@ -264,9 +264,17 @@ function Test-ApiConnection {
     $response = Invoke-RestMethod -Method Post -Uri "$base/chat/completions" -Headers $headers -ContentType 'application/json' -Body $body -TimeoutSec 60 -ErrorAction Stop
     $text = $response.choices[0].message.content
     if ($text -is [array]) { $text = ($text | ForEach-Object { $_.text }) -join "`n" }
-    Write-AppLog ("API chat test succeeded; returned_model=" + [string]$response.model + "; response=" + [string]$text)
-    Set-StatusText ("API OK - " + [string]$response.model) 'LightGreen'
-    if ($script:ApiTestResultText) { $script:ApiTestResultText.Text = ("SUCCESS - " + [string]$response.model + " - " + [string]$text); $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen }
+    $returnedModel = [string]$response.model
+    $returnedText = [string]$text
+    $apiLogMessage = 'API chat test succeeded; returned_model=' + $returnedModel + '; response=' + $returnedText
+    Write-AppLog $apiLogMessage
+    $apiStatusText = 'API OK - ' + $returnedModel
+    Set-StatusText $apiStatusText 'LightGreen'
+    if ($script:ApiTestResultText) {
+        $apiResultText = 'SUCCESS - ' + $returnedModel + ' - ' + $returnedText
+        $script:ApiTestResultText.Text = $apiResultText
+        $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen
+    }
     $script:ApiStatusCard.Text = 'Connected'
     $script:ApiStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGreen
 }
@@ -282,8 +290,13 @@ function Fetch-Models {
     if ($ids.Count -eq 0) { throw 'The API returned no model IDs.' }
     Set-ModelItems $ids $script:ModelCombo.Text
     Write-AppLog "Retrieved $($ids.Count) models."
-    if ($script:ApiTestResultText) { $script:ApiTestResultText.Text = ('Loaded ' + [string]$ids.Count + ' model IDs from this API key. Choose one, then test it.'); $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen }
-    Set-StatusText ('Models loaded - ' + [string]$ids.Count) 'LightGreen'
+    if ($script:ApiTestResultText) {
+        $loadedText = 'Loaded ' + [string]$ids.Count + ' model IDs from this API key. Choose one, then test it.'
+        $script:ApiTestResultText.Text = $loadedText
+        $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen
+    }
+    $loadedStatus = 'Models loaded - ' + [string]$ids.Count
+    Set-StatusText $loadedStatus 'LightGreen'
 }
 
 function Get-ModelProfile([string]$ModelId) {
@@ -478,7 +491,8 @@ function Start-Bridge {
             Write-AppLog "Stopped stale manager-owned bridge PID=$listenerPid before applying selected model."
         } catch {
             $stopErrorText = [string]$_.Exception.Message
-            throw ('A previous manager Bridge (PID ' + [string]$listenerPid + ') is using port ' + [string]$port + ' and could not be stopped: ' + $stopErrorText)
+            $stopMessage = 'A previous manager Bridge (PID ' + [string]$listenerPid + ') is using port ' + [string]$port + ' and could not be stopped: ' + $stopErrorText
+            throw $stopMessage
         }
     }
 
@@ -519,7 +533,8 @@ function Start-Bridge {
     $script:ActiveModel = $model
     $script:ActiveBaseUrl = $base
     $script:ActivePort = $port
-    Write-AppLog ('Bridge process launched; port=' + [string]$port + ', alias=' + [string]$alias + ', upstream model=' + [string]$model + '.')
+    $bridgeStartedMessage = 'Bridge process launched; port=' + [string]$port + ', alias=' + [string]$alias + ', upstream model=' + [string]$model + '.'
+    Write-AppLog $bridgeStartedMessage
     Update-CursorValues
 
     # Starting the child must not wait on a network health check on the WPF UI thread.
