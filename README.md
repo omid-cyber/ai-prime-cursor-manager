@@ -6,6 +6,12 @@ English | [فارسی](README.fa.md)
 
 ## What it does
 
+## Interface languages
+
+The WPF interface has a language selector in the top-right corner. Supported languages are **English (default), Estonian, French, and German**. Changing the selector updates translated UI labels, tabs, buttons, tooltips, the security notice, and status messages. The selected language is saved in the per-user settings file and restored when the application next opens.
+
+Some technical identifiers, model IDs, URLs, and provider responses remain in their original form so they can be copied accurately.
+
 - Windows PowerShell/WPF dashboard for testing an AI Prime Tech key and fetching model IDs available to that key.
 - Local Node.js bridge bound to `127.0.0.1`, exposing one configurable model alias to Cursor and forwarding requests to AI Prime Tech.
 - Bearer-key authentication between Cursor and the local bridge; Cursor should receive the bridge key, not the upstream AI Prime Tech key.
