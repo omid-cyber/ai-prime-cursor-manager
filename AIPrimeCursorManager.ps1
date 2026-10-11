@@ -657,7 +657,7 @@ try {
 } catch {
     $message = Get-SafeWorkerError $_
     $code = ''
-    if ($message -match '"code"\s*:\s*"([^"]+)"') { $code = $Matches[1] }
+    if ($message -match '"code"\s*:\s*"(?<code>\w+)"') { $code = $Matches.code }
     $busy = ($message -match '(?i)gateway_concurrency_limit|concurren(?:cy|t).*limit|too many requests|HTTP\s*429|status code 429')
     [pscustomobject]@{ Success=$false; Kind=$Kind; Model=$ModelId; ModelIds=@(); Response=''; Error=$message; Code=$code; IsConcurrency=$busy }
 }
