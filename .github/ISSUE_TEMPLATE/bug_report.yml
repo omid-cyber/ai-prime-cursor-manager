@@ -1,0 +1,48 @@
+name: Bug report
+description: Report a reproducible issue without sharing credentials.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never include API keys, bridge keys, tunnel URLs, private source code, or unredacted logs.**
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      placeholder: 1.7.0-alpha.1
+    validations:
+      required: true
+  - type: input
+    id: windows
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 24H2
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and redacted error
+    validations:
+      required: true
+  - type: checkboxes
+    id: secrets
+    attributes:
+      label: Security confirmation
+      options:
+        - label: I removed API keys, bridge keys, tunnel URLs, and private project information.
+          required: true
