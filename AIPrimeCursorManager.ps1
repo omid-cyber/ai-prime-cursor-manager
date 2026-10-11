@@ -282,8 +282,8 @@ function Fetch-Models {
     if ($ids.Count -eq 0) { throw 'The API returned no model IDs.' }
     Set-ModelItems $ids $script:ModelCombo.Text
     Write-AppLog "Retrieved $($ids.Count) models."
-    if ($script:ApiTestResultText) { $script:ApiTestResultText.Text = "Loaded $($ids.Count) model IDs from this API key. Choose one, then test it."; $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen }
-    Set-StatusText "Models loaded — $($ids.Count)" 'LightGreen'
+    if ($script:ApiTestResultText) { $script:ApiTestResultText.Text = ('Loaded ' + [string]$ids.Count + ' model IDs from this API key. Choose one, then test it.'); $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::LightGreen }
+    Set-StatusText ('Models loaded - ' + [string]$ids.Count) 'LightGreen'
 }
 
 function Get-ModelProfile([string]$ModelId) {
@@ -327,7 +327,7 @@ function Update-ModelAdvice {
     }
     if ($script:ModelCountLabel) {
         if ($script:LoadedModelIds.Count -gt 0) {
-            $script:ModelCountLabel.Text = "KEY CATALOG · $($script:LoadedModelIds.Count) models loaded"
+            $script:ModelCountLabel.Text = ('KEY CATALOG - ' + [string]$script:LoadedModelIds.Count + ' models loaded')
         } else {
             $script:ModelCountLabel.Text = 'KEY CATALOG · Not loaded yet'
         }
@@ -423,7 +423,7 @@ function Start-Bridge {
         if ($sameSettings) {
             Write-AppLog "Bridge is already running with the selected model and settings."
             $runningAlias = Get-ModelAlias $requestedModel
-            Set-StatusText ("Bridge running - " + $runningAlias) "LightGreen"
+            Set-StatusText ('Bridge running - ' + $runningAlias) 'LightGreen'
             return
         }
         Write-AppLog "Bridge settings changed; restarting from model=$($script:ActiveModel) to model=$requestedModel."
@@ -477,7 +477,8 @@ function Start-Bridge {
             Start-Sleep -Milliseconds 250
             Write-AppLog "Stopped stale manager-owned bridge PID=$listenerPid before applying selected model."
         } catch {
-            throw "A previous manager Bridge (PID $listenerPid) is using port $port and could not be stopped: $($_.Exception.Message)"
+            $stopErrorText = [string]$_.Exception.Message
+            throw ('A previous manager Bridge (PID ' + [string]$listenerPid + ') is using port ' + [string]$port + ' and could not be stopped: ' + $stopErrorText)
         }
     }
 
@@ -492,7 +493,7 @@ function Start-Bridge {
 
     $psi = New-Object System.Diagnostics.ProcessStartInfo
     $psi.FileName = $node
-    $psi.Arguments = '"' + $script:BridgeScriptPath + '"'
+    $psi.Arguments = ([char]34).ToString() + $script:BridgeScriptPath + ([char]34).ToString()
     $psi.WorkingDirectory = Split-Path -Parent $script:BridgeScriptPath
     $psi.UseShellExecute = $false
     $psi.CreateNoWindow = $true
@@ -518,7 +519,7 @@ function Start-Bridge {
     $script:ActiveModel = $model
     $script:ActiveBaseUrl = $base
     $script:ActivePort = $port
-    Write-AppLog "Bridge process launched; port=$port, alias=$alias, upstream model=$model."
+    Write-AppLog ('Bridge process launched; port=' + [string]$port + ', alias=' + [string]$alias + ', upstream model=' + [string]$model + '.')
     Update-CursorValues
 
     # Starting the child must not wait on a network health check on the WPF UI thread.
