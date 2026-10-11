@@ -78,9 +78,34 @@ try {
         }
     }
 
-    $bindingMatch = [regex]::Match($source, '(?m)^\$controlNames\s*=\s*"([^"]+)"\.Split\("\|"\)')
+    $bindingMatch = [regex]::Match($source, '(?m)^\$controlNamesText\s*=\s*"([^"]+)"\s*
+        $legacyBinding = [regex]::Match($source, '(?s)\$controlNames\s*=\s*@\((.*?)\r?\n\)')
+        if (-not $legacyBinding.Success) {
+            throw 'Could not locate the named-control binding list.'
+        }
+        $controlNames = [regex]::Matches($legacyBinding.Groups[1].Value, "'([^']+)'") |
+            ForEach-Object { $_.Groups[1].Value }
+    }
+
+    foreach ($controlName in $controlNames) {
+        if (-not $seenNames.ContainsKey($controlName)) {
+            throw "Control binding '$controlName' has no matching x:Name in XAML."
+        }
+    }
+
+    Write-Host 'PASS: XAML is well-formed XML.' -ForegroundColor Green
+    Write-Host "PASS: $($seenNames.Count) unique x:Name controls." -ForegroundColor Green
+    Write-Host "PASS: $($seenStyles.Count) unique implicit WPF styles." -ForegroundColor Green
+    Write-Host "PASS: $($controlNames.Count) bound control names resolve." -ForegroundColor Green
+    exit 0
+}
+catch {
+    Write-Host "XAML preflight FAILED: $($_.Exception.Message)" -ForegroundColor Red
+    exit 1
+}
+)
     if ($bindingMatch.Success) {
-        $controlNames = @($bindingMatch.Groups[1].Value.Split('|'))
+        $controlNames = @($bindingMatch.Groups[1].Value -split '\|')
     } else {
         $legacyBinding = [regex]::Match($source, '(?s)\$controlNames\s*=\s*@\((.*?)\r?\n\)')
         if (-not $legacyBinding.Success) {
