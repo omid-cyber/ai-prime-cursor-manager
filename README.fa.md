@@ -54,6 +54,19 @@ npm run check
 - Bridge را مستقیماً در شبکه LAN یا اینترنت منتشر نکن. تونل عمومی موقت فقط برای تست کنترل‌شده است.
 - هر کلیدی را که قبلاً در چت، اسکرین‌شات، issue یا لاگ منتشر شده، باطل و جایگزین کن.
 
+## دریافت ZIP سورس اعتبارسنجی‌شده (نسخه آزمایشی)
+
+یک Workflow دستی در GitHub Actions یک فایل ZIP فقط شامل سورس می‌سازد و قبل از ارائه، فایل ZIP استخراج‌شده را دوباره بررسی می‌کند:
+
+1. صفحه [Actions برای بسته سورس](https://github.com/omid-cyber/ai-prime-cursor-manager/actions/workflows/package-alpha-source.yml) را باز کن.
+2. Workflow با نام **Package Alpha Source Bundle** را انتخاب کن، روی شاخه `main` گزینه **Run workflow** را بزن و منتظر موفقیت اجرا بمان.
+3. از اجرای موفق، Artifact با نام `ai-prime-cursor-manager-source-<commit>` را دانلود کن. این Artifact پس از ۱۴ روز منقضی می‌شود.
+4. ZIP را کامل در یک پوشه معمولی استخراج کن و فایل `Start-AI-Prime-Cursor-Manager.bat` را اجرا کن.
+
+Workflow بررسی‌های Node.js، تست‌های آفلاین Bridge/Tunnel و اعتبارسنجی PowerShell/XAML را اجرا می‌کند. سپس ZIP را در یک پوشه تازه استخراج کرده و تست‌ها را روی همان نسخه استخراج‌شده دوباره اجرا می‌کند.
+
+**این بسته، ZIP سورس اعتبارسنجی‌شده است؛ فایل EXE کامپایل‌شده یا نسخه پایدار نیست.** رابط زنده WPF و تونل واقعی Cloudflare هنوز باید به‌صورت دستی روی Windows 10/11 آزمایش شوند. هنوز مجوزی برای بازتوزیع انتخاب نشده است؛ فایل `LICENSE-DECISION.md` را ببین.
+
 ## بلوغ فعلی پروژه
 
 این کد چند اصلاح تاریخی پس از خطاهای اجرای ویندوز داشته است؛ تست سورس جایگزین تست کامل GUI روی ویندوز نیست. گزارش تست و راهنمای انتشار را ببین: [TEST-REPORT.md](TEST-REPORT.md) و [docs/RELEASING.md](docs/RELEASING.md).
