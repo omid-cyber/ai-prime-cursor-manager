@@ -12,8 +12,13 @@ try {
     $parseErrors = $null
     [void][System.Management.Automation.Language.Parser]::ParseFile($SourceFile, [ref]$tokens, [ref]$parseErrors)
     if ($parseErrors -and $parseErrors.Count -gt 0) {
-        $first = $parseErrors[0]
-        throw ("PowerShell syntax error in {0}:{1}: {2}" -f $SourceFile, $first.Extent.StartLineNumber, $first.Message)
+        $lines = $source -split '\r?\n'
+        $details = foreach ($parseError in $parseErrors) {
+            $lineNumber = $parseError.Extent.StartLineNumber
+            $lineText = if ($lineNumber -gt 0 -and $lineNumber -le $lines.Count) { $lines[$lineNumber - 1].Trim() } else { $parseError.Extent.Text }
+            "Line $lineNumber, column $($parseError.Extent.StartColumnNumber): $($parseError.Message) | Text: $lineText"
+        }
+        throw ("PowerShell syntax errors in {0}:`n{1}" -f $SourceFile, ($details -join "`n"))
     }
     $helperPath = Join-Path (Split-Path -Parent $SourceFile) 'cloudflare-tunnel-manager.ps1'
     if (Test-Path -LiteralPath $helperPath) {
