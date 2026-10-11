@@ -54,6 +54,19 @@ Or double-click `Run-Bridge-Smoke-Tests.bat` on Windows. Tests use a mock upstre
 - Do not expose the bridge directly to a LAN or internet. The temporary public tunnel is only for controlled testing; the key remains required.
 - Rotate any key that has ever been pasted into chat, screenshots, issues or logs.
 
+## Download a validated source bundle (alpha)
+
+A manual GitHub Actions workflow creates a source-only ZIP and validates the extracted archive before uploading it:
+
+1. Open [Actions](https://github.com/omid-cyber/ai-prime-cursor-manager/actions/workflows/package-alpha-source.yml).
+2. Select **Package Alpha Source Bundle**, choose **Run workflow** on `main`, and wait for the run to complete.
+3. Download the `ai-prime-cursor-manager-source-<commit>` artifact from the successful run. The artifact expires after 14 days.
+4. Extract the ZIP fully to a normal folder and launch `Start-AI-Prime-Cursor-Manager.bat`.
+
+The workflow reruns Node syntax checks, offline Bridge/Tunnel smoke tests and PowerShell/XAML preflight. It also extracts the ZIP into a fresh directory and repeats the checks against that copy.
+
+**This is a validated source bundle, not a compiled EXE or stable release.** The live WPF interface and real Cloudflare Quick Tunnel still require manual testing on Windows 10/11. No redistribution license has been selected; see `LICENSE-DECISION.md`.
+
 ## Current project maturity
 
 The code includes historical fixes after Windows runtime errors, so source-level tests are not a substitute for a full GUI smoke test on Windows. See [TEST-REPORT.md](TEST-REPORT.md) and [docs/RELEASING.md](docs/RELEASING.md). Please report failures with the exact error text after removing secrets.
