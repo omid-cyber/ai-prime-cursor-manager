@@ -13,7 +13,7 @@ This proves source packaging and extracted-archive validation pass for that comm
 
 ---
 
-# Test report — GitHub-ready source snapshot
+## Historical source-level test results
 
 Tested in the packaging environment on 2026-10-11.
 
