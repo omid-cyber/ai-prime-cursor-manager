@@ -7,7 +7,7 @@ English | [Eesti](README.et.md) | [Français](README.fr.md) | [Deutsch](README.d
 ## What it does
 
 - Windows PowerShell/WPF dashboard for testing an AI Prime Tech key and fetching model IDs available to that key.
-- Local Node.js bridge bound to \`127.0.0.1\`, exposing one configurable model alias to Cursor and forwarding requests to AI Prime Tech.
+- Local Node.js bridge bound to `127.0.0.1`, exposing one configurable model alias to Cursor and forwarding requests to AI Prime Tech.
 - Bearer-key authentication between Cursor and the local bridge; Cursor should receive the bridge key, not the upstream AI Prime Tech key.
 - Bridge controls, logs, cursor setup values, model selection and experimental Cloudflare Quick Tunnel management.
 - Offline smoke tests that use a local mock upstream and do not require real API credentials.
@@ -21,7 +21,7 @@ Some technical identifiers, model IDs, URLs, and provider responses remain in th
 ## Important limitations
 
 - **Built-in Cursor Explore limitation:** this project cannot override Cursor product restrictions. Depending on Cursor version/configuration, a BYOK custom model may not be independently selectable for the built-in Explore Subagent.
-- **Remote Cursor and localhost:** a remote/cloud request cannot directly reach your computer's \`127.0.0.1\`. The experimental Quick Tunnel tab offers a temporary public HTTPS route for testing. Keep authentication enabled and stop the tunnel after use. Do not use an unauthenticated public bridge.
+- **Remote Cursor and localhost:** a remote/cloud request cannot directly reach your computer's `127.0.0.1`. The experimental Quick Tunnel tab offers a temporary public HTTPS route for testing. Keep authentication enabled and stop the tunnel after use. Do not use an unauthenticated public bridge.
 - **Windows validation:** this development environment cannot run WPF. Real startup, Start/Stop Bridge, download progress, and Quick Tunnel must be verified by a Windows tester before making a stable release.
 - The prebuilt EXE is intentionally not tracked in the source repository until it can be verified against the current source. Run the PowerShell launcher from the full extracted folder instead.
 - Prompts and code sent through the bridge are processed by AI Prime Tech. Do not send confidential code unless permitted by your policies.
@@ -30,14 +30,14 @@ Some technical identifiers, model IDs, URLs, and provider responses remain in th
 
 - Windows 10/11
 - Windows PowerShell 5.1+ with WPF
-- Node.js 20+ on \`PATH\`
+- Node.js 20+ on `PATH`
 - Active AI Prime Tech API key with access to the chosen model
 
 ## Run from source
 
 1. Download or clone this repository and extract it to a normal folder (not directly inside the ZIP).
-2. Run \`Start-AI-Prime-Cursor-Manager.bat\`.
-3. If startup fails, run \`Start-AI-Prime-Cursor-Manager-Diagnostics.bat\` and share only the error text, never keys or tunnel URLs.
+2. Run `Start-AI-Prime-Cursor-Manager.bat`.
+3. If startup fails, run `Start-AI-Prime-Cursor-Manager-Diagnostics.bat` and share only the error text, never keys or tunnel URLs.
 4. In Dashboard, enter the AI Prime Tech API key and use **Refresh model catalog**.
 5. Select a model and run **Test selected model** before a longer session.
 6. Start the local Bridge. In a separate Cursor profile, configure **Use OpenAI API Key** and **Override OpenAI Base URL** with values shown in Cursor Setup. Use the *local bridge key*, not the AI Prime Tech key.
@@ -46,17 +46,17 @@ Some technical identifiers, model IDs, URLs, and provider responses remain in th
 
 With Node.js 20+ installed:
 
-\`\`\`powershell
+```powershell
 npm test
 npm run check
-\`\`\`
+```
 
-Or double-click \`Run-Bridge-Smoke-Tests.bat\` on Windows. Tests use a mock upstream and do not call AI Prime Tech.
+Or double-click `Run-Bridge-Smoke-Tests.bat` on Windows. Tests use a mock upstream and do not call AI Prime Tech.
 
 ## Security
 
 - Never commit API keys, bridge keys, access tokens, logs, settings or Cloudflare tunnel URLs.
-- The bridge must bind to \`127.0.0.1\`, and API endpoints must require the random local bearer key.
+- The bridge must bind to `127.0.0.1`, and API endpoints must require the random local bearer key.
 - Do not expose the bridge directly to a LAN or internet. The temporary public tunnel is only for controlled testing; the key remains required.
 - Rotate any key that has ever been pasted into chat, screenshots, issues or logs.
 
@@ -65,13 +65,13 @@ Or double-click \`Run-Bridge-Smoke-Tests.bat\` on Windows. Tests use a mock upst
 A manual GitHub Actions workflow creates a source-only ZIP and validates the extracted archive before uploading it:
 
 1. Open [Actions](https://github.com/omid-cyber/ai-prime-cursor-manager/actions/workflows/package-alpha-source.yml).
-2. Select **Package Alpha Source Bundle**, choose **Run workflow** on \`main\`, and wait for the run to complete.
-3. Download the \`ai-prime-cursor-manager-source-<commit>\` artifact from the successful run. The artifact expires after 14 days.
-4. Extract the ZIP fully to a normal folder and launch \`Start-AI-Prime-Cursor-Manager.bat\`.
+2. Select **Package Alpha Source Bundle**, choose **Run workflow** on `main`, and wait for the run to complete.
+3. Download the `ai-prime-cursor-manager-source-<commit>` artifact from the successful run. The artifact expires after 14 days.
+4. Extract the ZIP fully to a normal folder and launch `Start-AI-Prime-Cursor-Manager.bat`.
 
 The workflow reruns Node syntax checks, offline Bridge/Tunnel smoke tests and PowerShell/XAML preflight. It also extracts the ZIP into a fresh directory and repeats the checks against that copy.
 
-**This is a validated source bundle, not a compiled EXE or stable release.** The live WPF interface and real Cloudflare Quick Tunnel still require manual testing on Windows 10/11. No redistribution license has been selected; see \`LICENSE-DECISION.md\`.
+**This is a validated source bundle, not a compiled EXE or stable release.** The live WPF interface and real Cloudflare Quick Tunnel still require manual testing on Windows 10/11. No redistribution license has been selected; see `LICENSE-DECISION.md`.
 
 ## Current project maturity
 
