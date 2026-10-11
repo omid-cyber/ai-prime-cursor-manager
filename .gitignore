@@ -1,0 +1,38 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+*.secret
+*credentials*
+*token*
+*api-key*
+*apikey*
+
+# Local logs and runtime state
+*.log
+cloudflared.stdout.log
+cloudflared.stderr.log
+tunnel-state.json
+settings.json
+settings.json.*
+
+# Downloaded runtime binaries / generated output
+*.exe
+*.msi
+*.dll
+node_modules/
+dist/
+build/
+release/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.user
+*.suo
+
+# Test temp files
+.tmp/
+.temp/
