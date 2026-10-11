@@ -1,0 +1,14 @@
+{
+  "name": "ai-prime-cursor-manager",
+  "version": "1.7.0-alpha.1",
+  "private": false,
+  "description": "Experimental Windows desktop manager and authenticated local OpenAI-compatible bridge for AI Prime Tech with Cursor",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test tests/bridge-smoke.test.mjs tests/tunnel-helper-smoke.test.mjs",
+    "test:bridge": "node --test tests/bridge-smoke.test.mjs",
+    "test:tunnel": "node --test tests/tunnel-helper-smoke.test.mjs",
+    "check": "node --check bridge/server.mjs && node --check tests/bridge-smoke.test.mjs && node --check tests/tunnel-helper-smoke.test.mjs"
+  }
+}
