@@ -22,7 +22,7 @@ const checks = [
   ['download validates cloudflared version before install', () => assert.match(helper, /--version.*cloudflared/s)],
   ['UI migrates legacy tunnel-state JSON by adding missing progress fields', () => { assert.match(ui, /Backwards? compatibility: tunnel-state\.json may come from older releases/); assert.match(ui, /if \(\$null -eq \$state\.PSObject\.Properties\[\$name\]\)/); assert.match(ui, /progress = -1/); assert.match(ui, /bytesDownloaded = 0/); assert.match(ui, /bytesTotal = 0/); }],
   ['UI has visible progress bar and text', () => { assert.match(uiXaml, /x:Name="TunnelProgressBar"/); assert.match(uiXaml, /x:Name="TunnelProgressText"/); }],
-  ['UI binds progress controls', () => { assert.match(ui, /TunnelStatusCard/); assert.match(ui, /TunnelProgressBar/); assert.match(ui, /TunnelProgressText/); assert.match(ui, /\.Split\("\|"\)/); }],
+  ['UI binds progress controls', () => { assert.match(ui, /\$controlNamesText\s*=/); assert.match(ui, /\$controlNames\s*=\s*\$controlNamesText\s*-split/); assert.ok(ui.includes('TunnelStatusCard|TunnelProgressBar|TunnelProgressText')); }],
   ['bridge only binds loopback', () => assert.match(bridge, /const HOST = "127\.0\.0\.1"/)],
   ['bridge uses bearer authentication for API endpoints', () => assert.match(bridge, /req\.headers\.authorization === `Bearer \$\{LOCAL_KEY\}`/)],
   ['public URL only accepts Cloudflare trycloudflare host', () => assert.match(ui, /trycloudflare\\\.com/)],
