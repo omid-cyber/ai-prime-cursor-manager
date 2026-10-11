@@ -3,8 +3,8 @@ run-name: Build and validate source ZIP - ${{ github.sha }}
 
 on:
   push:
-    paths:
-      - ".github/workflows/package-alpha-source.yml"
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
