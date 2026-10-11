@@ -14,6 +14,12 @@ try {
     $parseErrors = $null
     [void][System.Management.Automation.Language.Parser]::ParseFile($SourceFile, [ref]$tokens, [ref]$parseErrors)
     if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $longStringTokens = @($tokens | Where-Object {
+            $_.Kind.ToString() -match 'String' -and $_.Extent.EndLineNumber -gt $_.Extent.StartLineNumber
+        })
+        foreach ($t in $longStringTokens) {
+            Write-Host ("STRING TOKEN {0} starts={1} ends={2} chars={3}" -f $t.Kind, $t.Extent.StartLineNumber, $t.Extent.EndLineNumber, $t.Extent.Text.Length) -ForegroundColor Yellow
+        }
         $lines = $source -split "\r?\n"
         $details = foreach ($e in $parseErrors) {
             $lineNumber = $e.Extent.StartLineNumber
