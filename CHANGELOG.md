@@ -9,3 +9,5 @@ All entries below reflect the code history provided with this repository; this i
 - Experimental Cloudflare Quick Tunnel helper with download validation and progress-state support.
 - Offline bridge and tunnel contract smoke tests.
 - Explicit experimental status; prebuilt EXE excluded pending Windows runtime validation.
+- Windows GitHub Actions validation includes PowerShell 5.1 parsing and XAML/control-name checks; PowerShell files retain a UTF-8 BOM for compatibility.
+- Manual source-bundle workflow creates a ZIP, tests the extracted copy and uploads a short-lived Actions artifact. This is not an automatic public release.
