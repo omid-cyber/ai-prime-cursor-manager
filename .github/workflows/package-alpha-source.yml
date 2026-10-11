@@ -1,4 +1,5 @@
 name: Package Alpha Source Bundle
+run-name: Package validated source bundle - ${{ github.sha }}
 
 on:
   push:
