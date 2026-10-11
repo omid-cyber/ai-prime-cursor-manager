@@ -1,4 +1,4 @@
-param(
+﻿param(
     [ValidateSet('Start')][string]$Mode = 'Start',
     [int]$Port = 8787,
     [string]$AppDataDir = (Join-Path $env:LOCALAPPDATA 'AIPrimeCursorBridge')
