@@ -998,3 +998,427 @@ $xaml = @'
     <Style TargetType="ComboBoxItem"><Setter Property="Background" Value="#111B2D"/><Setter Property="Foreground" Value="#E5E7EB"/><Setter Property="Padding" Value="9,7"/><Setter Property="BorderBrush" Value="#24344B"/><Style.Triggers><Trigger Property="IsHighlighted" Value="True"><Setter Property="Background" Value="#263A59"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="#315B91"/><Setter Property="Foreground" Value="#FFFFFF"/></Trigger></Style.Triggers></Style>
     <Style TargetType="Button"><Setter Property="Background" Value="#263A59"/><Setter Property="Foreground" Value="#F8FAFC"/><Setter Property="BorderBrush" Value="#3B526F"/><Setter Property="Padding" Value="14,9"/><Setter Property="MinHeight" Value="36"/><Setter Property="Margin" Value="0,4,8,4"/><Setter Property="Cursor" Value="Hand"/><Setter Property="FontWeight" Value="SemiBold"/></Style>
     <Style TargetType="CheckBox"><Setter Property="Foreground" Value="#D1D9E6"/><Setter Property="Margin" Value="0,6,0,9"/></Style>
+    <Style TargetType="TabItem"><Setter Property="Foreground" Value="#CBD5E1"/><Setter Property="Background" Value="#111B2D"/><Setter Property="Padding" Value="18,10"/><Setter Property="Margin" Value="0,0,5,0"/></Style>
+  </Window.Resources>
+  <Grid Margin="22">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid Grid.Row="0" Margin="0,0,0,14">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel>
+        <TextBlock Text="AI Prime Cursor Manager" FontSize="26" FontWeight="Bold" Foreground="#F8FAFC"/>
+        <TextBlock Text="v1.7 · Backward-compatible tunnel state · download progress · Cloudflare startup" Foreground="#94A3B8" FontSize="12"/>
+      </StackPanel>
+      <Border Grid.Column="1" Background="#172338" CornerRadius="9" Padding="12,8" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="#64748B" Margin="0,0,8,0" VerticalAlignment="Center"/><TextBlock x:Name="OverallStatus" Text="Ready" Foreground="#CBD5E1" FontWeight="SemiBold"/></StackPanel>
+      </Border>
+    </Grid>
+    <Border Grid.Row="1" Background="#182640" CornerRadius="8" Padding="12" Margin="0,0,0,14">
+      <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="#C7D7F2" Text="Security: the AI Prime Tech key stays in this Windows app and is sent only to AI Prime Tech. Cursor receives a separate local bridge key. Keys are never written to logs. The local bridge binds to 127.0.0.1 only."/>
+    </Border>
+    <TabControl x:Name="MainTabs" Grid.Row="2" Background="#0B1220" BorderBrush="#25344B">
+      <TabItem Header="Dashboard">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+          <StackPanel Margin="16">
+            <Grid Margin="0,0,0,12">
+              <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+              <Border Grid.Column="0" Background="#111B2D" CornerRadius="10" Padding="14" Margin="0,0,10,0"><StackPanel><TextBlock Text="AI PRIME TECH API" Foreground="#94A3B8" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="ApiStatusCard" Text="Not tested" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0"/><TextBlock Text="Models and chat completion" Foreground="#64748B" FontSize="11"/></StackPanel></Border>
+              <Border Grid.Column="1" Background="#111B2D" CornerRadius="10" Padding="14" Margin="0,0,10,0"><StackPanel><TextBlock Text="LOCAL BRIDGE" Foreground="#94A3B8" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="BridgeStatusCard" Text="Stopped" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0"/><TextBlock x:Name="BridgePortCard" Text="127.0.0.1:8787" Foreground="#64748B" FontSize="11"/></StackPanel></Border>
+              <Border Grid.Column="2" Background="#111B2D" CornerRadius="10" Padding="14"><StackPanel><TextBlock Text="CURSOR MODEL ALIAS" Foreground="#94A3B8" FontSize="11" FontWeight="Bold"/><TextBlock x:Name="AliasCard" Text="aiprimetech-sonnet-4-6" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,6,0,0"/><TextBlock Text="Forwarded to chosen upstream model" Foreground="#64748B" FontSize="11"/></StackPanel></Border>
+            </Grid>
+            <Border Background="#111B2D" CornerRadius="10" Padding="16" Margin="0,0,0,12">
+              <StackPanel>
+                <TextBlock Text="AI Prime Tech connection" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <Label Content="API Base URL"/><TextBox x:Name="ApiBaseUrlBox" Text="https://aiprimetech.io/v1"/>
+                <Label Content="AI Prime Tech API Key"/><PasswordBox x:Name="ApiKeyBox"/>
+                <CheckBox x:Name="RememberKeyCheck" Content="Remember API key encrypted for this Windows account (optional)" IsChecked="False"/>
+                <DockPanel Margin="0,4,0,0" LastChildFill="False">
+                  <TextBlock x:Name="ModelCountLabel" Text="KEY CATALOG · Not loaded yet" Foreground="#7DA9F7" FontSize="11" FontWeight="Bold" VerticalAlignment="Center"/>
+                  <Button x:Name="StrongestModelButton" Content="✦ Select strongest" Background="#3D2D64" BorderBrush="#65519B" DockPanel.Dock="Right" Margin="8,0,0,0"/>
+                </DockPanel>
+                <Label Content="Choose the upstream model (exact ID returned by your key)"/>
+                <ComboBox x:Name="ModelCombo" IsEditable="False" IsTextSearchEnabled="True" StaysOpenOnEdit="False" Text="claude-sonnet-4-6" ToolTip="Fetch Models loads the models available to this API key. Select one here; the bridge will forward requests to the selected ID."/>
+                <Border Background="#0B1728" BorderBrush="#263A59" BorderThickness="1" CornerRadius="8" Padding="11" Margin="0,0,0,7">
+                  <StackPanel>
+                    <TextBlock Text="MODEL GUIDE" Foreground="#7DA9F7" FontSize="10" FontWeight="Bold" Margin="0,0,0,4"/>
+                    <TextBlock x:Name="ModelRecommendationText" Text="Fetch models from your key, then choose a model from the list." Foreground="#C4D3E8" TextWrapping="Wrap" FontSize="12"/>
+                  </StackPanel>
+                </Border>
+                <WrapPanel Margin="0,3,0,0">
+                  <Button x:Name="TestApiButton" Content="Test selected model" Background="#2563EB"/>
+                  <Button x:Name="FetchModelsButton" Content="Refresh model catalog"/>
+                  <Button x:Name="SaveSettingsButton" Content="Save settings"/>
+                  <Button x:Name="ForgetKeyButton" Content="Forget key" Background="#542B38" BorderBrush="#844456"/>
+                </WrapPanel>
+                <TextBlock Text="Model selection is taken from the API catalog. After changing a model, click Start / Apply Bridge to restart the local bridge with that model." Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,6,0,0"/>
+                <Border Background="#10251F" BorderBrush="#1F5A43" BorderThickness="1" CornerRadius="7" Padding="10" Margin="0,8,0,0">
+                  <TextBlock x:Name="ApiTestResultText" Text="Ready · Fetch models to load the models available to this API key." Foreground="#A7C8BC" FontSize="12" TextWrapping="Wrap"/>
+                </Border>
+              </StackPanel>
+            </Border>
+            <Border Background="#111B2D" CornerRadius="10" Padding="16">
+              <StackPanel>
+                <TextBlock Text="Local bridge controls" FontSize="17" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="160"/></Grid.ColumnDefinitions><StackPanel><Label Content="Local port (loopback only)"/><TextBox x:Name="PortBox" Text="8787" Width="130" HorizontalAlignment="Left"/><TextBlock Text="The local bridge listens on 127.0.0.1. Use the Cloudflare Tunnel tab if remote Cursor cannot reach localhost." Foreground="#94A3B8" FontSize="11"/></StackPanel><StackPanel Grid.Column="1"><Button x:Name="StartBridgeButton" Content="▶  Start / Apply Bridge" Background="#16815F" BorderBrush="#219879" Margin="0,14,0,8"/><Button x:Name="StopBridgeButton" Content="■  Stop Bridge" Background="#542B38" BorderBrush="#844456"/></StackPanel></Grid>
+                <WrapPanel Margin="0,8,0,0"><Button x:Name="TestBridgeButton" Content="Test Bridge"/><Button x:Name="OpenCursorSetupButton" Content="Cursor Setup →" Background="#2563EB"/></WrapPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </TabItem>
+      <TabItem Header="Cursor Setup">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="18">
+          <TextBlock Text="Use these values in your separate Cursor profile" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,5"/>
+          <TextBlock Text="In Cursor Settings → Models, enable Use OpenAI API Key and Override OpenAI Base URL. Use the local bridge key below, not your AI Prime Tech key." Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,16"/>
+          <Border Background="#111B2D" CornerRadius="10" Padding="16" Margin="0,0,0,12"><StackPanel>
+            <Label Content="OpenAI-compatible Base URL"/><DockPanel><TextBox x:Name="CursorBaseLabel" IsReadOnly="True" Text="http://127.0.0.1:8787/v1"/><Button x:Name="CopyBaseButton" Content="Copy" DockPanel.Dock="Right"/></DockPanel>
+            <Label Content="API Key for Cursor (local bridge key)"/><DockPanel><PasswordBox x:Name="CursorKeyPassword"/><TextBox x:Name="CursorKeyRevealBox" Visibility="Collapsed" IsReadOnly="True"/><Button x:Name="RevealKeyButton" Content="Reveal" DockPanel.Dock="Right"/><Button x:Name="CopyKeyButton" Content="Copy Key" DockPanel.Dock="Right"/></DockPanel>
+            <Label Content="Custom model ID to add"/><DockPanel><TextBox x:Name="CursorModelLabel" IsReadOnly="True" Text="aiprimetech-sonnet-4-6"/><Button x:Name="CopyModelButton" Content="Copy" DockPanel.Dock="Right"/></DockPanel>
+            <WrapPanel><Button x:Name="CopyAllButton" Content="Copy Setup Summary" Background="#2563EB"/><Button x:Name="CopyJsonButton" Content="Copy MCP JSON (info only)"/></WrapPanel>
+          </StackPanel></Border>
+          <Border Background="#172338" CornerRadius="10" Padding="15"><StackPanel>
+            <TextBlock Text="Setup steps" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,8"/>
+            <TextBlock Text="1. Start / Apply Bridge from Dashboard." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="2. If Cursor says private networks are forbidden, open the Cloudflare Tunnel tab and click Start Quick Tunnel." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="3. In Cursor Settings → Models, enable Use OpenAI API Key and paste the local Bridge key." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="4. Enable Override OpenAI Base URL and paste the Base URL shown here. When Quick Tunnel is active, this is the public HTTPS URL." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="5. Add the custom model ID above and try it in Cursor. The public URL changes whenever a Quick Tunnel is restarted." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="Important: Cursor may still restrict selecting a custom BYOK model independently for the built-in Explore Subagent. This manager does not bypass Cursor product limitations." Foreground="#FBBF24" TextWrapping="Wrap" Margin="0,8,0,0"/>
+          </StackPanel></Border>
+        </StackPanel></ScrollViewer>
+      </TabItem>
+      <TabItem Header="Logs">
+        <Grid Margin="14"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+          <DockPanel Grid.Row="0" Margin="0,0,0,8"><TextBlock Text="Runtime and API activity (credentials are not logged)" Foreground="#94A3B8" VerticalAlignment="Center"/><StackPanel Orientation="Horizontal" DockPanel.Dock="Right"><Button x:Name="RefreshLogsButton" Content="Refresh"/><Button x:Name="ExportLogsButton" Content="Export…"/><Button x:Name="ClearLogsButton" Content="Clear"/></StackPanel></DockPanel>
+          <TextBox x:Name="LogBox" Grid.Row="1" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" FontFamily="Consolas" FontSize="11" Background="#070D17"/>
+        </Grid>
+      </TabItem>
+      <TabItem Header="Settings">
+        <StackPanel Margin="18">
+          <TextBlock Text="Manager settings and security" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,12"/>
+          <Border Background="#111B2D" CornerRadius="10" Padding="16" Margin="0,0,0,12"><StackPanel>
+            <TextBlock Text="Storage locations" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,8"/>
+            <TextBlock x:Name="SettingsPathLabel" TextWrapping="Wrap" Foreground="#94A3B8"/>
+            <TextBlock x:Name="ManagerLogPathLabel" TextWrapping="Wrap" Foreground="#94A3B8" Margin="0,5,0,0"/>
+            <TextBlock x:Name="BridgeScriptPathLabel" TextWrapping="Wrap" Foreground="#94A3B8" Margin="0,5,0,0"/>
+          </StackPanel></Border>
+          <Border Background="#111B2D" CornerRadius="10" Padding="16" Margin="0,0,0,12"><StackPanel>
+            <TextBlock Text="Security notes" FontWeight="SemiBold" FontSize="15" Margin="0,0,0,8"/>
+            <TextBlock Text="• The AI Prime Tech key is kept in app memory unless you opt into encrypted storage." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="• Optional saved key and the local Cursor bridge key are protected with Windows DPAPI for this Windows account." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="• The bridge binds to 127.0.0.1 and should not be exposed to a LAN or the internet." TextWrapping="Wrap" Margin="0,2"/>
+            <TextBlock Text="• Code/prompt contents are forwarded to AI Prime Tech when Cursor calls the bridge." TextWrapping="Wrap" Margin="0,2"/>
+          </StackPanel></Border>
+          <WrapPanel><Button x:Name="SaveSettingsButton2" Content="Save Settings" Background="#2563EB"/><Button x:Name="OpenDataFolderButton" Content="Open App Data Folder"/><Button x:Name="OpenScriptFolderButton" Content="Open App Folder"/></WrapPanel>
+        </StackPanel>
+      </TabItem>
+      <TabItem Header="Cloudflare Tunnel">
+        <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="18">
+          <TextBlock Text="Public HTTPS endpoint for Cursor" FontSize="19" FontWeight="SemiBold" Margin="0,0,0,5"/>
+          <TextBlock Text="Create a temporary Cloudflare Quick Tunnel automatically. No DNS, domain or Cloudflare login is required. The trycloudflare.com URL changes when the tunnel restarts." Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,12"/>
+          <Border Background="#2B2115" BorderBrush="#8A5A20" BorderThickness="1" CornerRadius="8" Padding="12" Margin="0,0,0,12">
+            <TextBlock TextWrapping="Wrap" Foreground="#FCD9A4" Text="Security: this publishes your Bridge to the public internet. API endpoints require the random local Bridge key, but use Quick Tunnels for testing only. The app stops the tunnel when it closes. Never share the URL or Bridge key."/>
+          </Border>
+          <Border Background="#111B2D" CornerRadius="10" Padding="16" Margin="0,0,0,12">
+            <StackPanel>
+              <TextBlock Text="Tunnel status" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,6"/>
+              <TextBlock x:Name="TunnelStatusCard" Text="Stopped · No public URL" Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,6"/>
+              <ProgressBar x:Name="TunnelProgressBar" Height="12" Minimum="0" Maximum="100" Value="0" IsIndeterminate="False" Background="#0B1220" Foreground="#38BDF8" BorderBrush="#334155" Margin="0,0,0,3"/>
+              <TextBlock x:Name="TunnelProgressText" Text="Idle. Start Quick Tunnel to begin." Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,10"/>
+              <Label Content="Generated public URL"/>
+              <TextBox x:Name="TunnelUrlBox" IsReadOnly="True" Text="" ToolTip="Cloudflare-generated URL; becomes available after the tunnel starts."/>
+              <WrapPanel Margin="0,8,0,0">
+                <Button x:Name="StartTunnelButton" Content="Start Quick Tunnel" Background="#16815F" BorderBrush="#219879"/>
+                <Button x:Name="StopTunnelButton" Content="Stop Tunnel" Background="#542B38" BorderBrush="#844456"/>
+                <Button x:Name="CopyTunnelUrlButton" Content="Copy Public URL"/>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+          <Border Background="#111B2D" CornerRadius="10" Padding="16">
+            <StackPanel>
+              <TextBlock Text="Cursor connection settings" FontSize="15" FontWeight="SemiBold" Margin="0,0,0,6"/>
+              <TextBlock Text="When the URL is ready, the Cursor Setup tab automatically switches to this public HTTPS base URL. Keep the local Bridge and this tunnel running while Cursor uses it." Foreground="#94A3B8" TextWrapping="Wrap" Margin="0,0,0,8"/>
+              <Label Content="OpenAI-compatible Base URL for Cursor"/>
+              <DockPanel><TextBox x:Name="TunnelBaseUrlBox" IsReadOnly="True" Text=""/><Button x:Name="CopyTunnelBaseButton" Content="Copy Base URL" DockPanel.Dock="Right"/></DockPanel>
+              <TextBlock Text="For a permanent custom hostname, you need a Cloudflare account and a domain configured in Cloudflare. Quick Tunnel automatically creates a random DNS hostname and is intended for testing/development." Foreground="#FBBF24" TextWrapping="Wrap" Margin="0,10,0,0"/>
+            </StackPanel>
+          </Border>
+        </StackPanel></ScrollViewer>
+      </TabItem>
+    </TabControl>
+    <DockPanel Grid.Row="3" Margin="0,12,0,0">
+      <TextBlock Text="Local Windows utility · Node.js 20+ · PowerShell 5.1+" Foreground="#64748B" VerticalAlignment="Center"/>
+      <TextBlock x:Name="FooterStatus" Text="Ready" Foreground="#94A3B8" DockPanel.Dock="Right" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+    </DockPanel>
+  </Grid>
+</Window>
+'@
+
+$stringReader = New-Object System.IO.StringReader($xaml)
+try {
+    $xmlReader = [System.Xml.XmlReader]::Create($stringReader)
+    try {
+        $script:Window = [Windows.Markup.XamlReader]::Load($xmlReader)
+    }
+    finally {
+        if ($xmlReader) { $xmlReader.Dispose() }
+    }
+}
+finally {
+    $stringReader.Dispose()
+}
+
+# Bind named controls to script scope for predictable event handlers.
+$controlNames = @(
+    'MainTabs','OverallStatus','ApiStatusCard','BridgeStatusCard','BridgePortCard','AliasCard',
+    'ApiBaseUrlBox','ApiKeyBox','RememberKeyCheck','ModelCombo','ModelCountLabel','ModelRecommendationText','ApiTestResultText','StrongestModelButton','TestApiButton','FetchModelsButton','SaveSettingsButton','ForgetKeyButton',
+    'PortBox','StartBridgeButton','StopBridgeButton','TestBridgeButton','OpenCursorSetupButton',
+    'CursorBaseLabel','CursorKeyPassword','CursorKeyRevealBox','RevealKeyButton','CopyKeyButton','CursorModelLabel',
+    'CopyBaseButton','CopyModelButton','CopyAllButton','CopyJsonButton','LogBox','RefreshLogsButton','ExportLogsButton','ClearLogsButton',
+    'SettingsPathLabel','ManagerLogPathLabel','BridgeScriptPathLabel','SaveSettingsButton2','OpenDataFolderButton','OpenScriptFolderButton','FooterStatus',
+    'TunnelStatusCard','TunnelProgressBar','TunnelProgressText','TunnelUrlBox','TunnelBaseUrlBox','StartTunnelButton','StopTunnelButton','CopyTunnelUrlButton','CopyTunnelBaseButton'
+)
+foreach ($name in $controlNames) { Set-Variable -Name $name -Value $script:Window.FindName($name) -Scope Script }
+
+Load-Settings
+$script:ApiBaseUrlBox.Text = [string]$script:CurrentSettings.ApiBaseUrl
+$script:ModelCombo.Items.Clear()
+[void]$script:ModelCombo.Items.Add([string]$script:CurrentSettings.Model)
+$script:ModelCombo.SelectedItem = [string]$script:CurrentSettings.Model
+$script:PortBox.Text = [string]$script:CurrentSettings.Port
+$script:RememberKeyCheck.IsChecked = [bool]$script:CurrentSettings.RememberApiKey
+$script:ApiKeyBox.Password = [string]$script:ApiKey
+$script:SettingsPathLabel.Text = "Settings (saved credentials encrypted with Windows DPAPI): $script:SettingsPath"
+$script:ManagerLogPathLabel.Text = "Logs: $script:ManagerLogPath and $script:BridgeLogPath"
+$script:BridgeScriptPathLabel.Text = "Bridge runtime: $script:BridgeScriptPath"
+$script:BridgePortCard.Text = "127.0.0.1:$($script:CurrentSettings.Port)"
+Update-ModelAdvice
+Update-TunnelUi
+
+$script:ApiKeyBox.Add_PasswordChanged({ $script:ApiKey = $script:ApiKeyBox.Password })
+$script:ModelCombo.Add_SelectionChanged({ Update-ModelAdvice })
+$script:ModelCombo.Add_LostKeyboardFocus({ Update-ModelAdvice })
+$script:ApiBaseUrlBox.Add_LostKeyboardFocus({
+    try { if ([Uri]::IsWellFormedUriString($script:ApiBaseUrlBox.Text.Trim(), [UriKind]::Absolute) -and $script:ApiBaseUrlBox.Text.Trim().StartsWith('https://')) { } } catch { }
+})
+$script:PortBox.Add_LostKeyboardFocus({ Update-CursorValues })
+
+$script:ApiOperationTimer = New-Object System.Windows.Threading.DispatcherTimer
+$script:ApiOperationTimer.Interval = [TimeSpan]::FromMilliseconds(250)
+$script:ApiOperationTimer.Add_Tick({
+    try {
+        if ($script:ApiOperation -and $script:ApiOperation.Handle.IsCompleted) {
+            Complete-ApiOperation
+        }
+    } catch {
+        $msg = Get-ErrorSummary $_
+        try { Write-AppLog "Unhandled background-operation completion error: $msg" } catch { }
+        try {
+            $script:ApiOperationTimer.Stop()
+            if ($script:ApiOperation -and $script:ApiOperation.PowerShell) { $script:ApiOperation.PowerShell.Dispose() }
+            $script:ApiOperation = $null
+            Set-ApiOperationControls $true
+            $script:ApiTestResultText.Text = "Operation failed safely: $msg"
+            $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon
+            Set-StatusText 'Operation failed; app remains open' 'Salmon'
+        } catch { }
+    }
+})
+
+$script:TestApiButton.Add_Click({
+    try { Start-ApiOperation 'Test' }
+    catch { $msg = Get-ErrorSummary $_; Write-AppLog "Could not start API test: $msg"; Set-StatusText 'Could not start API test' 'Salmon'; $script:ApiTestResultText.Text = $msg; $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon }
+    Refresh-LogView
+})
+$script:FetchModelsButton.Add_Click({
+    try { Start-ApiOperation 'Models' }
+    catch { $msg = Get-ErrorSummary $_; Write-AppLog "Could not fetch models: $msg"; Set-StatusText 'Could not fetch models' 'Salmon'; $script:ApiTestResultText.Text = $msg; $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon }
+    Refresh-LogView
+})
+$script:StrongestModelButton.Add_Click({
+    try { Select-StrongestAvailableModel }
+    catch { [System.Windows.MessageBox]::Show((Get-ErrorSummary $_), 'Model selection', 'OK', 'Warning') | Out-Null }
+})
+$saveAction = {
+    try { Save-SettingsFromUi; [System.Windows.MessageBox]::Show('Settings saved.', 'AI Prime Cursor Manager', 'OK', 'Information') | Out-Null }
+    catch { [System.Windows.MessageBox]::Show((Get-ErrorSummary $_), 'Save Settings Failed', 'OK', 'Error') | Out-Null }
+    Refresh-LogView
+}
+$script:SaveSettingsButton.Add_Click($saveAction)
+$script:SaveSettingsButton2.Add_Click($saveAction)
+$script:ForgetKeyButton.Add_Click({
+    $answer = [System.Windows.MessageBox]::Show('Forget the saved and current AI Prime Tech API key? If the bridge is running, stop it and start again after entering a key.', 'Forget API Key', 'YesNo', 'Warning')
+    if ($answer -eq 'Yes') {
+        Stop-Bridge
+        $script:ApiKey = ''
+        $script:ApiKeyBox.Clear()
+        $script:CurrentSettings.EncryptedApiKey = ''
+        $script:CurrentSettings.RememberApiKey = $false
+        $script:RememberKeyCheck.IsChecked = $false
+        Save-SettingsCore
+        Write-AppLog 'AI Prime Tech key cleared from manager memory and saved settings.'
+        Set-StatusText 'API key forgotten' 'Orange'
+        Refresh-LogView
+    }
+})
+$script:StartBridgeButton.Add_Click({
+    try {
+        Save-SettingsFromUi
+        Start-Bridge
+        if ($script:BridgeStatusCard.Text -notlike 'Running*') {
+            $script:BridgeStatusCard.Text = 'Started — verify with Test Bridge'
+            $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::Orange
+        }
+    }
+    catch {
+        $msg = Get-ErrorSummary $_
+        try { Write-AppLog "Bridge start failed: $msg" } catch { }
+        try {
+            Set-StatusText 'Bridge start failed' 'Salmon'
+            $script:BridgeStatusCard.Text = 'Start failed'
+            $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::Salmon
+            $script:ApiTestResultText.Text = $msg
+            $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon
+        } catch { }
+    }
+    try { Refresh-LogView } catch { }
+})
+$script:StopBridgeButton.Add_Click({
+    try {
+        Stop-Bridge
+        $script:BridgeStatusCard.Text = 'Stopped'
+        $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGray
+    } catch {
+        $msg = Get-ErrorSummary $_
+        try { Write-AppLog "Bridge stop failed: $msg" } catch { }
+        try { Set-StatusText "Stop failed: $msg" 'Salmon' } catch { }
+    }
+})
+$script:TestBridgeButton.Add_Click({
+    try { Start-ApiOperation 'Bridge' }
+    catch {
+        $msg = Get-ErrorSummary $_
+        try { Write-AppLog "Could not start bridge test: $msg" } catch { }
+        try {
+            Set-StatusText 'Could not start bridge test' 'Salmon'
+            $script:ApiTestResultText.Text = $msg
+            $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon
+        } catch { }
+    }
+    try { Refresh-LogView } catch { }
+})
+$script:StartTunnelButton.Add_Click({
+    try { Start-QuickTunnel }
+    catch {
+        $msg = Get-ErrorSummary $_
+        Write-AppLog "Quick Tunnel start failed: $msg"
+        if ($script:TunnelStatusCard) { $script:TunnelStatusCard.Text = "Failed · $msg"; $script:TunnelStatusCard.Foreground = [System.Windows.Media.Brushes]::Salmon }
+        Set-StatusText 'Quick Tunnel failed' 'Salmon'
+    }
+    try { Refresh-LogView } catch { }
+})
+$script:StopTunnelButton.Add_Click({
+    try { Stop-QuickTunnel }
+    catch { $msg = Get-ErrorSummary $_; Write-AppLog "Quick Tunnel stop failed: $msg"; Set-StatusText "Tunnel stop failed: $msg" 'Salmon' }
+})
+$script:CopyTunnelUrlButton.Add_Click({ try { Copy-TunnelPublicUrl } catch { Set-StatusText (Get-ErrorSummary $_) 'Orange' } })
+$script:CopyTunnelBaseButton.Add_Click({ try { Copy-TunnelBaseUrl } catch { Set-StatusText (Get-ErrorSummary $_) 'Orange' } })
+
+$script:OpenCursorSetupButton.Add_Click({ $script:MainTabs.SelectedIndex = 1 })
+$script:CopyBaseButton.Add_Click({ try { Copy-Text $script:CursorBaseLabel.Text 'Cursor Base URL' } catch { } })
+$script:CopyModelButton.Add_Click({ try { Copy-Text $script:CursorModelLabel.Text 'Cursor model alias' } catch { } })
+$script:CopyKeyButton.Add_Click({ try { Copy-Text $script:BridgeKey 'Local bridge key' } catch { } })
+$script:RevealKeyButton.Add_Click({
+    if ($script:CursorKeyRevealBox.Visibility -eq [System.Windows.Visibility]::Collapsed) {
+        $script:CursorKeyRevealBox.Text = $script:BridgeKey
+        $script:CursorKeyPassword.Visibility = [System.Windows.Visibility]::Collapsed
+        $script:CursorKeyRevealBox.Visibility = [System.Windows.Visibility]::Visible
+        $script:RevealKeyButton.Content = 'Hide'
+    } else {
+        $script:CursorKeyPassword.Visibility = [System.Windows.Visibility]::Visible
+        $script:CursorKeyRevealBox.Visibility = [System.Windows.Visibility]::Collapsed
+        $script:RevealKeyButton.Content = 'Reveal'
+    }
+})
+$script:CopyAllButton.Add_Click({
+    $text = "Base URL: $($script:CursorBaseLabel.Text)`r`nAPI Key: [copy with Copy Key button for security]`r`nCustom Model: $($script:CursorModelLabel.Text)`r`n`r`nEnable Use OpenAI API Key and Override OpenAI Base URL in Cursor Settings → Models."
+    try { Copy-Text $text 'Cursor setup summary' } catch { }
+})
+$script:CopyJsonButton.Add_Click({
+    $port = [int]$script:CurrentSettings.Port
+    $json = @{
+        note = 'Informational only: the bridge is OpenAI-compatible and is configured in Cursor Settings > Models, not as MCP.'
+        baseUrl = $script:CursorBaseLabel.Text
+        model = $script:CursorModelLabel.Text
+    } | ConvertTo-Json -Depth 3
+    try { Copy-Text $json 'Bridge configuration information' } catch { }
+})
+$script:RefreshLogsButton.Add_Click({ Refresh-LogView })
+$script:ClearLogsButton.Add_Click({
+    $answer = [System.Windows.MessageBox]::Show('Clear manager and bridge logs?', 'Clear Logs', 'YesNo', 'Question')
+    if ($answer -eq 'Yes') {
+        Set-Content -Path $script:ManagerLogPath -Value '' -Encoding UTF8
+        Set-Content -Path $script:BridgeLogPath -Value '' -Encoding UTF8
+        $script:LastDisplayedLogs = ''
+        Write-AppLog 'Logs cleared by user.'
+        Refresh-LogView
+    }
+})
+$script:ExportLogsButton.Add_Click({
+    $dialog = New-Object Microsoft.Win32.SaveFileDialog
+    $dialog.Filter = 'Text log (*.txt)|*.txt|All files (*.*)|*.*'
+    $dialog.FileName = ('AIPrimeCursorLogs-{0}.txt' -f (Get-Date -Format 'yyyyMMdd-HHmmss'))
+    if ($dialog.ShowDialog() -eq $true) {
+        Refresh-LogView
+        [System.IO.File]::WriteAllText($dialog.FileName, $script:LogBox.Text, [System.Text.UTF8Encoding]::new($false))
+        Write-AppLog 'Logs exported by user.'
+        Refresh-LogView
+        Set-StatusText 'Logs exported' 'LightGreen'
+    }
+})
+$script:OpenDataFolderButton.Add_Click({ Start-Process -FilePath explorer.exe -ArgumentList ('"{0}"' -f $script:AppDataDir) })
+$script:OpenScriptFolderButton.Add_Click({ Start-Process -FilePath explorer.exe -ArgumentList ('"{0}"' -f $PSScriptRoot) })
+
+$script:LogTimer = New-Object System.Windows.Threading.DispatcherTimer
+$script:LogTimer.Interval = [TimeSpan]::FromMilliseconds(500)
+$script:LogTimer.Add_Tick({
+    $queued = $null
+    while ($script:LogQueue.TryDequeue([ref]$queued)) {
+        Write-AppLog $queued
+        $queued = $null
+    }
+    if (Test-BridgeRunning) {
+        $script:BridgeStatusCard.Text = 'Running'
+        $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGreen
+    } elseif ($script:BridgeProcess) {
+        $script:BridgeStatusCard.Text = 'Stopped'
+        $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGray
+        $script:BridgeProcess = $null
+    }
+    try { Update-TunnelUi } catch { }
+    if ($script:MainTabs.SelectedIndex -eq 2) { Refresh-LogView }
+})
+$script:MainTabs.Add_SelectionChanged({
+    if ($script:MainTabs.SelectedIndex -eq 2) { Refresh-LogView }
+})
+$script:LogTimer.Start()
+
+$script:Window.Add_Closing({
+    try { Stop-QuickTunnel } catch { }
+    try { $script:LogTimer.Stop() } catch { }
+    try { $script:ApiOperationTimer.Stop() } catch { }
+    if ($script:ApiOperation) {
+        try { $script:ApiOperation.PowerShell.Stop() } catch { }
+        try { $script:ApiOperation.PowerShell.Dispose() } catch { }
+        $script:ApiOperation = $null
+    }
+    try { Save-SettingsFromUi } catch { }
+    if (Test-BridgeRunning) {
+        try { $script:BridgeProcess.Kill(); [void]$script:BridgeProcess.WaitForExit(3000) } catch { }
+        Write-AppLog 'Manager closing; local bridge stopped.'
+    }
+})
+
+Write-AppLog 'AI Prime Cursor Manager launched.'
+Update-TunnelUi
+Refresh-LogView
+[void]$script:Window.ShowDialog()
