@@ -18,7 +18,10 @@ try {
             $_.Kind.ToString() -match 'String' -and $_.Extent.EndLineNumber -gt $_.Extent.StartLineNumber
         })
         foreach ($t in $longStringTokens) {
-            Write-Host ("STRING TOKEN {0} starts={1} ends={2} chars={3}" -f $t.Kind, $t.Extent.StartLineNumber, $t.Extent.EndLineNumber, $t.Extent.Text.Length) -ForegroundColor Yellow
+            $preview = [string]$t.Extent.Text
+            $preview = $preview -replace '[\r\n]+', ' '
+            if ($preview.Length -gt 220) { $preview = $preview.Substring(0, 220) }
+            Write-Host ("STRING TOKEN {0} starts={1} ends={2} chars={3} text={4}" -f $t.Kind, $t.Extent.StartLineNumber, $t.Extent.EndLineNumber, $t.Extent.Text.Length, $preview) -ForegroundColor Yellow
         }
         $lines = $source -split "\r?\n"
         $details = foreach ($e in $parseErrors) {
