@@ -1,6 +1,6 @@
 # Test report — GitHub Actions acceptance
 
-Latest validated source/package workflow run on 2026-10-11:
+Recorded successful source/package workflow run on 2026-10-11:
 
 - Source commit: `45376acbbcd5d82d22db623f711add7889c43f76`.
 - [Regular Tests workflow](https://github.com/omid-cyber/ai-prime-cursor-manager/actions/runs/38115346643): **success**.
@@ -9,7 +9,7 @@ Latest validated source/package workflow run on 2026-10-11:
 - Artifact: `ai-prime-cursor-manager-source-45376acbbcd5d82d22db623f711add7889c43f76`, 51,327 bytes (GitHub artifact container), SHA-256 digest `148562f11e7317fc712cb43ff06f08270129db08ab0e78e435ff66b10165b633`.
 - Artifact expiry: 2026-10-25. It can be downloaded from the Artifacts section of the [successful packaging run](https://github.com/omid-cyber/ai-prime-cursor-manager/actions/runs/38115346608).
 
-This proves source packaging and extracted-archive validation pass for that commit. It does **not** prove live WPF startup, real upstream API calls from the desktop UI, or a live Cloudflare tunnel. Documentation-only updates may be newer than the packaged artifact; run the packaging workflow again from `main` to package the latest revision.
+This proves source packaging and extracted-archive validation passed for that commit. It does **not** prove live WPF startup, real upstream API calls from the desktop UI, or a live Cloudflare tunnel. To package the current `main` revision, manually run **Package Alpha Source Bundle** in GitHub Actions and download the artifact belonging to that run; source-bundle artifacts expire after 14 days.
 
 ---
 
