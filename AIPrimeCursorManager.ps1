@@ -422,7 +422,8 @@ function Start-Bridge {
         if ($sameSettings) { $sameSettings = ($requestedPort -eq $script:ActivePort) }
         if ($sameSettings) {
             Write-AppLog "Bridge is already running with the selected model and settings."
-            Set-StatusText ("Bridge running — " + (Get-ModelAlias $requestedModel)) "LightGreen"
+            $runningAlias = Get-ModelAlias $requestedModel
+            Set-StatusText ("Bridge running - " + $runningAlias) "LightGreen"
             return
         }
         Write-AppLog "Bridge settings changed; restarting from model=$($script:ActiveModel) to model=$requestedModel."
@@ -1383,7 +1384,7 @@ $script:LogTimer.Add_Tick({
         $script:BridgeStatusCard.Text = "Running"
         $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGreen
     } elseif ($script:BridgeProcess) {
-        $script:BridgeStatusCard.Text = 'Stopped'
+        $script:BridgeStatusCard.Text = "Stopped"
         $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGray
         $script:BridgeProcess = $null
     }
