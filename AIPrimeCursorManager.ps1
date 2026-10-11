@@ -417,9 +417,12 @@ function Start-Bridge {
         $requestedBase = $script:ApiBaseUrlBox.Text.Trim().TrimEnd('/')
         $requestedPort = 8787
         [void][int]::TryParse($script:PortBox.Text.Trim(), [ref]$requestedPort)
-        if ($requestedModel -eq $script:ActiveModel -and $requestedBase -eq $script:ActiveBaseUrl -and $requestedPort -eq $script:ActivePort) {
-            Write-AppLog 'Bridge is already running with the selected model and settings.'
-            Set-StatusText "Bridge running — $(Get-ModelAlias $requestedModel)" 'LightGreen'
+        $sameSettings = ($requestedModel -eq $script:ActiveModel)
+        if ($sameSettings) { $sameSettings = ($requestedBase -eq $script:ActiveBaseUrl) }
+        if ($sameSettings) { $sameSettings = ($requestedPort -eq $script:ActivePort) }
+        if ($sameSettings) {
+            Write-AppLog "Bridge is already running with the selected model and settings."
+            Set-StatusText ("Bridge running — " + (Get-ModelAlias $requestedModel)) "LightGreen"
             return
         }
         Write-AppLog "Bridge settings changed; restarting from model=$($script:ActiveModel) to model=$requestedModel."
@@ -1209,7 +1212,7 @@ $script:ApiOperationTimer.Add_Tick({
             Set-ApiOperationControls $true
             $script:ApiTestResultText.Text = "Operation failed safely: $msg"
             $script:ApiTestResultText.Foreground = [System.Windows.Media.Brushes]::Salmon
-            Set-StatusText 'Operation failed; app remains open' 'Salmon'
+            Set-StatusText "Operation failed; app remains open" "Salmon"
         } catch { }
     }
 })
@@ -1275,7 +1278,7 @@ $script:StartBridgeButton.Add_Click({
 $script:StopBridgeButton.Add_Click({
     try {
         Stop-Bridge
-        $script:BridgeStatusCard.Text = 'Stopped'
+        $script:BridgeStatusCard.Text = "Stopped"
         $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGray
     } catch {
         $msg = Get-ErrorSummary $_
@@ -1377,7 +1380,7 @@ $script:LogTimer.Add_Tick({
         $queued = $null
     }
     if (Test-BridgeRunning) {
-        $script:BridgeStatusCard.Text = 'Running'
+        $script:BridgeStatusCard.Text = "Running"
         $script:BridgeStatusCard.Foreground = [System.Windows.Media.Brushes]::LightGreen
     } elseif ($script:BridgeProcess) {
         $script:BridgeStatusCard.Text = 'Stopped'
