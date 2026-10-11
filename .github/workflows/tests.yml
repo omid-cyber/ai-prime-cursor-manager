@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  node-smoke-tests:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Syntax checks
+        run: npm run check
+
+      - name: Bridge and tunnel smoke tests
+        run: npm test
+
+      - name: PowerShell and XAML preflight
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          .\Test-XamlResources.ps1 -SourceFile .\AIPrimeCursorManager.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
