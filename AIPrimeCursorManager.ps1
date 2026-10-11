@@ -518,7 +518,7 @@ function Start-Bridge {
     $script:ActiveModel = $model
     $script:ActiveBaseUrl = $base
     $script:ActivePort = $port
-    Write-AppLog ('Bridge process launched; port=' + $port + ', alias=' + $alias + ', upstream model=' + $model + '.')
+    Write-AppLog "Bridge process launched; port=$port, alias=$alias, upstream model=$model."
     Update-CursorValues
 
     # Starting the child must not wait on a network health check on the WPF UI thread.
@@ -1369,8 +1369,20 @@ $script:ExportLogsButton.Add_Click({
         Set-StatusText 'Logs exported' 'LightGreen'
     }
 })
-$script:OpenDataFolderButton.Add_Click({ Start-Process -FilePath explorer.exe -ArgumentList ('"{0}"' -f $script:AppDataDir) })
-$script:OpenScriptFolderButton.Add_Click({ Start-Process -FilePath explorer.exe -ArgumentList ('"{0}"' -f $PSScriptRoot) })
+$script:OpenDataFolderButton.Add_Click({
+    $folderPath = $script:AppDataDir
+    if (Test-Path -LiteralPath $folderPath) {
+        Start-Process -FilePath explorer.exe -ArgumentList $folderPath
+    } else {
+        Set-StatusText "App data folder does not exist yet." "Orange"
+    }
+})
+$script:OpenScriptFolderButton.Add_Click({
+    $folderPath = $PSScriptRoot
+    if (Test-Path -LiteralPath $folderPath) {
+        Start-Process -FilePath explorer.exe -ArgumentList $folderPath
+    }
+})
 
 $script:LogTimer = New-Object System.Windows.Threading.DispatcherTimer
 $script:LogTimer.Interval = [TimeSpan]::FromMilliseconds(500)
