@@ -1189,9 +1189,7 @@ Update-TunnelUi
 $script:ApiKeyBox.Add_PasswordChanged({ $script:ApiKey = $script:ApiKeyBox.Password })
 $script:ModelCombo.Add_SelectionChanged({ Update-ModelAdvice })
 $script:ModelCombo.Add_LostKeyboardFocus({ Update-ModelAdvice })
-$script:ApiBaseUrlBox.Add_LostKeyboardFocus({
-    try { if ([Uri]::IsWellFormedUriString($script:ApiBaseUrlBox.Text.Trim(), [UriKind]::Absolute) -and $script:ApiBaseUrlBox.Text.Trim().StartsWith('https://')) { } } catch { }
-})
+# Base URL is validated by the API operation before making requests.
 $script:PortBox.Add_LostKeyboardFocus({ Update-CursorValues })
 
 $script:ApiOperationTimer = New-Object System.Windows.Threading.DispatcherTimer
