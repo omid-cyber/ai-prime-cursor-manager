@@ -1,0 +1,119 @@
+name: Package Alpha Source Bundle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package-source:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check source
+        run: npm run check
+
+      - name: Run offline smoke tests
+        run: npm test
+
+      - name: Validate PowerShell and XAML
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          .\Test-XamlResources.ps1 -SourceFile .\AIPrimeCursorManager.ps1
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Package and validate source ZIP
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $root = $env:GITHUB_WORKSPACE
+          $stage = Join-Path $env:RUNNER_TEMP 'AI-Prime-Cursor-Manager-source'
+          $validate = Join-Path $env:RUNNER_TEMP 'AI-Prime-Cursor-Manager-validate'
+          $zip = Join-Path $root 'AI-Prime-Cursor-Manager-source.zip'
+
+          foreach ($path in @($stage, $validate, $zip)) {
+            if (Test-Path -LiteralPath $path) {
+              Remove-Item -LiteralPath $path -Recurse -Force
+            }
+          }
+          New-Item -ItemType Directory -Path $stage -Force | Out-Null
+
+          $items = @(
+            'AIPrimeCursorManager.ps1',
+            'cloudflare-tunnel-manager.ps1',
+            'Test-XamlResources.ps1',
+            'Start-AI-Prime-Cursor-Manager.bat',
+            'Start-AI-Prime-Cursor-Manager-Diagnostics.bat',
+            'Run-Bridge-Smoke-Tests.bat',
+            'bridge',
+            'tests',
+            'docs',
+            'package.json',
+            'README.md',
+            'README.fa.md',
+            'CHANGELOG.md',
+            'TEST-REPORT.md',
+            'SECURITY.md',
+            'CONTRIBUTING.md',
+            'LICENSE-DECISION.md'
+          )
+
+          foreach ($item in $items) {
+            $sourcePath = Join-Path $root $item
+            if (-not (Test-Path -LiteralPath $sourcePath)) {
+              throw "Required source-bundle item is missing: $item"
+            }
+            $destinationPath = Join-Path $stage $item
+            Copy-Item -LiteralPath $sourcePath -Destination $destinationPath -Recurse -Force
+          }
+
+          $package = Get-Content -LiteralPath (Join-Path $stage 'package.json') -Raw | ConvertFrom-Json
+          $buildInfo = @(
+            "Package: AI Prime Cursor Manager source bundle"
+            "Version: $($package.version)"
+            "Commit: $env:GITHUB_SHA"
+            "Built UTC: $([DateTime]::UtcNow.ToString('o'))"
+            "Type: Source-only ZIP; not a compiled executable or stable release."
+            "Validation: Node syntax checks, offline smoke tests, PowerShell parse, XAML XML and named-control checks."
+            "Live WPF and Cloudflare end-to-end behavior must still be tested on a real Windows 10/11 machine."
+            "License: See LICENSE-DECISION.md. No redistribution license has been selected."
+          ) -join [Environment]::NewLine
+          Set-Content -LiteralPath (Join-Path $stage 'SOURCE-BUNDLE-INFO.txt') -Value $buildInfo -Encoding UTF8
+
+          Compress-Archive -Path (Join-Path $stage '*') -DestinationPath $zip -CompressionLevel Optimal
+          Expand-Archive -LiteralPath $zip -DestinationPath $validate -Force
+
+          $mainScript = Join-Path $validate 'AIPrimeCursorManager.ps1'
+          $preflightScript = Join-Path $validate 'Test-XamlResources.ps1'
+          & powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File $preflightScript -SourceFile $mainScript
+          if ($LASTEXITCODE -ne 0) { throw 'Extracted source ZIP failed PowerShell/XAML preflight.' }
+
+          Push-Location $validate
+          try {
+            npm run check
+            if ($LASTEXITCODE -ne 0) { throw 'Extracted source ZIP failed npm run check.' }
+            npm test
+            if ($LASTEXITCODE -ne 0) { throw 'Extracted source ZIP failed npm test.' }
+          } finally {
+            Pop-Location
+          }
+
+          Write-Host "Validated source bundle: $zip"
+          Write-Host "ZIP size: $((Get-Item -LiteralPath $zip).Length) bytes"
+
+      - name: Upload source bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-prime-cursor-manager-source-\${{ github.sha }}
+          path: AI-Prime-Cursor-Manager-source.zip
+          if-no-files-found: error
+          retention-days: 14
