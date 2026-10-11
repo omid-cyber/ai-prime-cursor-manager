@@ -1,6 +1,9 @@
 name: Package Alpha Source Bundle
 
 on:
+  push:
+    paths:
+      - ".github/workflows/package-alpha-source.yml"
   workflow_dispatch:
 
 permissions:
