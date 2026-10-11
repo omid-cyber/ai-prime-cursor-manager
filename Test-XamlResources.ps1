@@ -8,17 +8,16 @@ try {
     if (-not (Test-Path -LiteralPath $SourceFile)) {
         throw "Source PowerShell file not found: $SourceFile"
     }
-
     $source = Get-Content -LiteralPath $SourceFile -Raw -Encoding UTF8
 
-    # Parse the complete source with Windows PowerShell's parser before doing XAML checks.
     $tokens = $null
     $parseErrors = $null
     [void][System.Management.Automation.Language.Parser]::ParseFile($SourceFile, [ref]$tokens, [ref]$parseErrors)
     if ($parseErrors -and $parseErrors.Count -gt 0) {
+        $lines = $source -split "\r?\n"
         $details = foreach ($e in $parseErrors) {
             $lineNumber = $e.Extent.StartLineNumber
-            $lineText = ($source -split '\r?\n')[$lineNumber - 1].Trim()
+            $lineText = if ($lineNumber -gt 0 -and $lineNumber -le $lines.Count) { $lines[$lineNumber - 1].Trim() } else { $e.Extent.Text }
             "Line $lineNumber, column $($e.Extent.StartColumnNumber): $($e.Message) | $lineText"
         }
         throw ("PowerShell syntax errors in {0}:{1}{2}" -f $SourceFile, [Environment]::NewLine, ($details -join [Environment]::NewLine))
@@ -36,18 +35,15 @@ try {
     }
     Write-Host 'PASS: Main and tunnel-helper PowerShell syntax parsed successfully.' -ForegroundColor Green
 
-    # The application embeds XAML as Base64 so XML markup is not parsed as PowerShell source.
-    $base64Match = [regex]::Match($source, '(?m)^\$xamlBase64\s*=\s*''([A-Za-z0-9+/=]+)''\s*$')
-    if ($base64Match.Success) {
-        $xmlText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($base64Match.Groups[1].Value))
-    } else {
-        # Backward compatibility with older source bundles.
-        $legacyMatch = [regex]::Match($source, '(?s)\$xaml\s*=\s*@''\r?\n(.*?)\r?\n''@')
-        if (-not $legacyMatch.Success) {
-            throw 'Could not locate embedded XAML or its Base64 payload.'
-        }
-        $xmlText = $legacyMatch.Groups[1].Value
-    }
+    # Extract the embedded Base64 XAML using plain string operations (no brittle regex).
+    $base64Marker = '$xamlBase64 = '''
+    $base64Start = $source.IndexOf($base64Marker, [System.StringComparison]::Ordinal)
+    if ($base64Start -lt 0) { throw 'Embedded XAML Base64 assignment was not found.' }
+    $payloadStart = $base64Start + $base64Marker.Length
+    $payloadEnd = $source.IndexOf("'", $payloadStart)
+    if ($payloadEnd -le $payloadStart) { throw 'Embedded XAML Base64 payload is malformed.' }
+    $payload = $source.Substring($payloadStart, $payloadEnd - $payloadStart)
+    $xmlText = [System.Text.Encoding]::UTF8.GetString([System.Convert]::FromBase64String($payload))
 
     $xml = New-Object System.Xml.XmlDocument
     $xml.PreserveWhitespace = $false
@@ -59,9 +55,7 @@ try {
     foreach ($node in $xml.GetElementsByTagName('*')) {
         $name = $node.GetAttribute('Name', $xNs)
         if (-not [string]::IsNullOrWhiteSpace($name)) {
-            if ($seenNames.ContainsKey($name)) {
-                throw "Duplicate x:Name in XAML: $name"
-            }
+            if ($seenNames.ContainsKey($name)) { throw "Duplicate x:Name in XAML: $name" }
             $seenNames[$name] = $true
         }
     }
@@ -71,56 +65,26 @@ try {
         $target = $style.GetAttribute('TargetType')
         $key = $style.GetAttribute('Key', $xNs)
         if (-not [string]::IsNullOrWhiteSpace($target) -and [string]::IsNullOrWhiteSpace($key)) {
-            if ($seenStyles.ContainsKey($target)) {
-                throw "Duplicate implicit WPF Style for TargetType '$target'."
-            }
+            if ($seenStyles.ContainsKey($target)) { throw "Duplicate implicit WPF Style for TargetType '$target'." }
             $seenStyles[$target] = $true
         }
     }
 
-    $bindingMatch = [regex]::Match($source, '(?m)^\$controlNamesText\s*=\s*"([^"]+)"\s*
-        $legacyBinding = [regex]::Match($source, '(?s)\$controlNames\s*=\s*@\((.*?)\r?\n\)')
-        if (-not $legacyBinding.Success) {
-            throw 'Could not locate the named-control binding list.'
-        }
-        $controlNames = [regex]::Matches($legacyBinding.Groups[1].Value, "'([^']+)'") |
-            ForEach-Object { $_.Groups[1].Value }
-    }
+    # Resolve the pipe-delimited control names used by the main script.
+    $namesMarker = '$controlNamesText = "'
+    $namesStart = $source.IndexOf($namesMarker, [System.StringComparison]::Ordinal)
+    if ($namesStart -lt 0) { throw 'The control-name declaration was not found.' }
+    $namesPayloadStart = $namesStart + $namesMarker.Length
+    $namesPayloadEnd = $source.IndexOf('"', $namesPayloadStart)
+    if ($namesPayloadEnd -le $namesPayloadStart) { throw 'The control-name declaration is malformed.' }
+    $namesText = $source.Substring($namesPayloadStart, $namesPayloadEnd - $namesPayloadStart)
+    $controlNames = @($namesText -split '\|')
 
     foreach ($controlName in $controlNames) {
-        if (-not $seenNames.ContainsKey($controlName)) {
-            throw "Control binding '$controlName' has no matching x:Name in XAML."
-        }
+        if (-not $seenNames.ContainsKey($controlName)) { throw "Control binding '$controlName' has no matching x:Name in XAML." }
     }
 
-    Write-Host 'PASS: XAML is well-formed XML.' -ForegroundColor Green
-    Write-Host "PASS: $($seenNames.Count) unique x:Name controls." -ForegroundColor Green
-    Write-Host "PASS: $($seenStyles.Count) unique implicit WPF styles." -ForegroundColor Green
-    Write-Host "PASS: $($controlNames.Count) bound control names resolve." -ForegroundColor Green
-    exit 0
-}
-catch {
-    Write-Host "XAML preflight FAILED: $($_.Exception.Message)" -ForegroundColor Red
-    exit 1
-}
-)
-    if ($bindingMatch.Success) {
-        $controlNames = @($bindingMatch.Groups[1].Value -split '\|')
-    } else {
-        $legacyBinding = [regex]::Match($source, '(?s)\$controlNames\s*=\s*@\((.*?)\r?\n\)')
-        if (-not $legacyBinding.Success) {
-            throw 'Could not locate the named-control binding list.'
-        }
-        $controlNames = [regex]::Matches($legacyBinding.Groups[1].Value, "'([^']+)'") |
-            ForEach-Object { $_.Groups[1].Value }
-    }
-
-    foreach ($controlName in $controlNames) {
-        if (-not $seenNames.ContainsKey($controlName)) {
-            throw "Control binding '$controlName' has no matching x:Name in XAML."
-        }
-    }
-
+    Write-Host 'PASS: Main and tunnel-helper PowerShell syntax parsed successfully.' -ForegroundColor Green
     Write-Host 'PASS: XAML is well-formed XML.' -ForegroundColor Green
     Write-Host "PASS: $($seenNames.Count) unique x:Name controls." -ForegroundColor Green
     Write-Host "PASS: $($seenStyles.Count) unique implicit WPF styles." -ForegroundColor Green
