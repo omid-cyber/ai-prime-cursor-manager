@@ -514,7 +514,7 @@ function Start-Bridge {
     $script:ActiveModel = $model
     $script:ActiveBaseUrl = $base
     $script:ActivePort = $port
-    Write-AppLog "Bridge process launched; port=$port, alias=$alias, upstream model=$model."
+    Write-AppLog "Bridge process launched; port=$($port), alias=$($alias), upstream model=$($model)."
     Update-CursorValues
 
     # Starting the child must not wait on a network health check on the WPF UI thread.
