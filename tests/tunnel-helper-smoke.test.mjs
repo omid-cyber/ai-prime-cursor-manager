@@ -5,10 +5,11 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const helper = fs.readFileSync(path.join(root, 'cloudflare-tunnel-manager.ps1'), 'utf8');
 const ui = fs.readFileSync(path.join(root, 'AIPrimeCursorManager.ps1'), 'utf8');
-const xamlBase64Match = ui.match(/^\\$xamlBase64\\s*=\\s*'([A-Za-z0-9+/=]+)'\\s*$/m);
+const xamlBase64Match = ui.match(/^\$xamlBase64\s*=\s*'([A-Za-z0-9+/=]+)'\s*$/m);
+const legacyXamlMatch = ui.match(/\$xaml\s*=\s*@'\r?\n([\s\S]*?)\r?\n'@/);
 const uiXaml = xamlBase64Match
   ? Buffer.from(xamlBase64Match[1], 'base64').toString('utf8')
-  : (ui.match(/(?s)\\$xaml\\s*=\\s*@'\\r?\\n(.*?)\\r?\\n'@/)?.[1] ?? ui);
+  : (legacyXamlMatch?.[1] ?? ui);
 const bridge = fs.readFileSync(path.join(root, 'bridge', 'server.mjs'), 'utf8');
 const checks = [
   ['v1.7 version banner in UI', () => assert.match(ui, /v1\.7 · Backward-compatible tunnel state/)],
