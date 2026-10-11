@@ -1168,15 +1168,7 @@ finally {
 }
 
 # Bind named controls to script scope for predictable event handlers.
-$controlNames = @(
-    'MainTabs','OverallStatus','ApiStatusCard','BridgeStatusCard','BridgePortCard','AliasCard',
-    'ApiBaseUrlBox','ApiKeyBox','RememberKeyCheck','ModelCombo','ModelCountLabel','ModelRecommendationText','ApiTestResultText','StrongestModelButton','TestApiButton','FetchModelsButton','SaveSettingsButton','ForgetKeyButton',
-    'PortBox','StartBridgeButton','StopBridgeButton','TestBridgeButton','OpenCursorSetupButton',
-    'CursorBaseLabel','CursorKeyPassword','CursorKeyRevealBox','RevealKeyButton','CopyKeyButton','CursorModelLabel',
-    'CopyBaseButton','CopyModelButton','CopyAllButton','CopyJsonButton','LogBox','RefreshLogsButton','ExportLogsButton','ClearLogsButton',
-    'SettingsPathLabel','ManagerLogPathLabel','BridgeScriptPathLabel','SaveSettingsButton2','OpenDataFolderButton','OpenScriptFolderButton','FooterStatus',
-    'TunnelStatusCard','TunnelProgressBar','TunnelProgressText','TunnelUrlBox','TunnelBaseUrlBox','StartTunnelButton','StopTunnelButton','CopyTunnelUrlButton','CopyTunnelBaseButton'
-)
+$controlNames = @('MainTabs','OverallStatus','ApiStatusCard','BridgeStatusCard','BridgePortCard','AliasCard','ApiBaseUrlBox','ApiKeyBox','RememberKeyCheck','ModelCombo','ModelCountLabel','ModelRecommendationText','ApiTestResultText','StrongestModelButton','TestApiButton','FetchModelsButton','SaveSettingsButton','ForgetKeyButton','PortBox','StartBridgeButton','StopBridgeButton','TestBridgeButton','OpenCursorSetupButton','CursorBaseLabel','CursorKeyPassword','CursorKeyRevealBox','RevealKeyButton','CopyKeyButton','CursorModelLabel','CopyBaseButton','CopyModelButton','CopyAllButton','CopyJsonButton','LogBox','RefreshLogsButton','ExportLogsButton','ClearLogsButton','SettingsPathLabel','ManagerLogPathLabel','BridgeScriptPathLabel','SaveSettingsButton2','OpenDataFolderButton','OpenScriptFolderButton','FooterStatus','TunnelStatusCard','TunnelProgressBar','TunnelProgressText','TunnelUrlBox','TunnelBaseUrlBox','StartTunnelButton','StopTunnelButton','CopyTunnelUrlButton','CopyTunnelBaseButton')
 foreach ($name in $controlNames) { Set-Variable -Name $name -Value $script:Window.FindName($name) -Scope Script }
 
 Load-Settings
@@ -1344,11 +1336,10 @@ $script:CopyAllButton.Add_Click({
     try { Copy-Text $text 'Cursor setup summary' } catch { }
 })
 $script:CopyJsonButton.Add_Click({
-    $port = [int]$script:CurrentSettings.Port
-    $json = @{
-        note = 'Informational only: the bridge is OpenAI-compatible and is configured in Cursor Settings > Models, not as MCP.'
-        baseUrl = $script:CursorBaseLabel.Text
-        model = $script:CursorModelLabel.Text
+    $json = [ordered]@{
+        'note' = 'Informational only: bridge is configured in Cursor Settings Models, not as an MCP server.'
+        'baseUrl' = $script:CursorBaseLabel.Text
+        'model' = $script:CursorModelLabel.Text
     } | ConvertTo-Json -Depth 3
     try { Copy-Text $json 'Bridge configuration information' } catch { }
 })
@@ -1418,7 +1409,7 @@ $script:Window.Add_Closing({
     }
 })
 
-Write-AppLog 'AI Prime Cursor Manager launched.'
+Write-AppLog ("AI Prime Cursor Manager launched.")
 Update-TunnelUi
 Refresh-LogView
 [void]$script:Window.ShowDialog()
