@@ -2,7 +2,7 @@
   "name": "ai-prime-cursor-manager",
   "version": "1.7.0-alpha.1",
   "private": false,
-  "description": "Experimental Windows desktop manager and authenticated local OpenAI-compatible bridge for AI Prime Tech with Cursor",
+  "description": "AI Prime Cursor Manager by secocyber: experimental Windows desktop app that connects Cursor to AI Prime Tech through a local OpenAI-compatible bridge. Copyright (c) 2026 secocyber.",
   "type": "module",
   "engines": { "node": ">=20" },
   "scripts": {

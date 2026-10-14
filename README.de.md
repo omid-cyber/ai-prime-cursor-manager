@@ -1,6 +1,8 @@
-# AI Prime Cursor Manager (Windows) — Experimentell
+# AI Prime Cursor Manager (Windows) — Experimentell — Copyright © 2026 secocyber
 
-Copyright © 2026 secocyber. All rights reserved.
+**Copyright © 2026 secocyber. All rights reserved.**
+
+Windows-Download: [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). ZIP entpacken und `AIPrimeCursorManager.exe` starten.
 
 [English](README.md) | [Eesti](README.et.md) | [Français](README.fr.md) | Deutsch | [فارسی](README.fa.md)
 
@@ -25,7 +27,7 @@ Technische Bezeichner, Modell-IDs, URLs und Antworten des Anbieters bleiben im O
 - **Einschränkung des integrierten Cursor Explore:** Dieses Projekt kann Produktbeschränkungen von Cursor nicht umgehen. Je nach Cursor-Version und Konfiguration lässt sich ein benutzerdefiniertes BYOK-Modell möglicherweise nicht separat für den integrierten Explore Subagent auswählen.
 - **Remote-Cursor und localhost:** Eine Remote- oder Cloud-Anfrage kann nicht direkt auf `127.0.0.1` deines Computers zugreifen. Die experimentelle Quick-Tunnel-Registerkarte bietet für Tests eine temporäre öffentliche HTTPS-Adresse. Lasse die Authentifizierung aktiviert und stoppe den Tunnel nach dem Test. Verwende keine öffentliche Bridge ohne Authentifizierung.
 - **Windows-Validierung:** In dieser Entwicklungsumgebung kann WPF nicht ausgeführt werden. Vor einer stabilen Veröffentlichung muss ein Windows-Tester den tatsächlichen Start, das Starten/Stoppen der Bridge, den Download-Fortschritt und Quick Tunnel auf einem echten Windows-System prüfen.
-- Die vorkompilierte EXE wird absichtlich nicht im Quellcode-Repository geführt, solange sie nicht mit dem aktuellen Quellcode abgeglichen wurde. Starte stattdessen den PowerShell-Launcher aus dem vollständig entpackten Ordner.
+- Die Windows-EXE liegt als [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/tag/v1.8.0-experimental) bei. Die EXE selbst liegt nicht im Quellcodebaum.
 - Prompts und Code, die über die Bridge gesendet werden, werden von AI Prime Tech verarbeitet. Sende keinen vertraulichen Code, sofern deine Richtlinien dies nicht erlauben.
 
 ## Voraussetzungen

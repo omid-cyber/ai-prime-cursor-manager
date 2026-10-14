@@ -1,6 +1,8 @@
-# AI Prime Cursor Manager (Windows) — eksperimentaalne
+# AI Prime Cursor Manager (Windows) — eksperimentaalne — Copyright © 2026 secocyber
 
-Copyright © 2026 secocyber. All rights reserved.
+**Copyright © 2026 secocyber. All rights reserved.**
+
+Windowsi allalaadimine: [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). Paki ZIP lahti ja käivita `AIPrimeCursorManager.exe`.
 
 [English](README.md) | Eesti | [Français](README.fr.md) | [Deutsch](README.de.md) | [فارسی](README.fa.md)
 
@@ -25,7 +27,7 @@ Tehnilised identifikaatorid, mudeli-ID-d, URL-id ja teenusepakkuja vastused jä�
 - **Cursori sisseehitatud Explore'i piirang:** see projekt ei saa muuta Cursori enda tootepiiranguid. Olenevalt Cursori versioonist ja seadistusest ei pruugi BYOK-i kohandatud mudelit saada sisseehitatud Explore Subagentile eraldi määrata.
 - **Remote Cursor ja localhost:** kaug- või pilvepäring ei pääse otse sinu arvuti aadressile `127.0.0.1`. Eksperimentaalne Quick Tunneli vahekaart pakub testimiseks ajutist avalikku HTTPS-aadressi. Hoia autentimine lubatuna ja peata tunnel pärast kasutamist. Ära kasuta autentimata avalikku silda.
 - **Windowsi valideerimine:** selles arenduskeskkonnas ei saa WPF-i käivitada. Enne stabiilset väljalaset peab Windowsi testija kontrollima rakenduse käivitumist, silla käivitamist/peatamist, allalaadimise edenemist ja Quick Tunnelit päris Windowsis.
-- Eelkompileeritud EXE-faili ei hoita lähtekoodirepositooriumis enne, kui selle vastavus praegusele lähtekoodile on kontrollitud. Käivita selle asemel PowerShelli käivitaja täielikult lahti pakitud kaustast.
+- Windowsi EXE on avaldatud failina [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/tag/v1.8.0-experimental). EXE-faili ennast lähtekoodipuus ei ole.
 - Silla kaudu saadetud promptid ja kood töödeldakse AI Prime Techis. Ära saada konfidentsiaalset koodi, kui sinu eeskirjad seda ei luba.
 
 ## Nõuded

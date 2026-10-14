@@ -1,6 +1,8 @@
-# AI Prime Cursor Manager (Windows) — expérimental
+# AI Prime Cursor Manager (Windows) — expérimental — Copyright © 2026 secocyber
 
-Copyright © 2026 secocyber. All rights reserved.
+**Copyright © 2026 secocyber. All rights reserved.**
+
+Téléchargement Windows : [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). Décompressez l’archive et lancez `AIPrimeCursorManager.exe`.
 
 [English](README.md) | [Eesti](README.et.md) | Français | [Deutsch](README.de.md) | [فارسی](README.fa.md)
 
@@ -25,7 +27,7 @@ Les identifiants techniques, les ID de modèles, les URL et les réponses du fou
 - **Limite de l’Explore intégré à Cursor :** ce projet ne peut pas contourner les restrictions du produit Cursor. Selon la version et la configuration de Cursor, un modèle personnalisé BYOK peut ne pas être sélectionnable séparément pour l’Explore Subagent intégré.
 - **Cursor distant et localhost :** une requête distante ou cloud ne peut pas atteindre directement le `127.0.0.1` de votre ordinateur. L’onglet Quick Tunnel expérimental fournit une URL HTTPS publique temporaire pour les tests. Gardez l’authentification activée et arrêtez le tunnel après utilisation. N’utilisez pas de pont public sans authentification.
 - **Validation Windows :** cet environnement de développement ne peut pas exécuter WPF. Avant une version stable, un testeur Windows doit vérifier le démarrage réel, le démarrage/l’arrêt du pont, la progression du téléchargement et Quick Tunnel sur une vraie machine Windows.
-- Le fichier EXE précompilé n’est volontairement pas suivi dans le dépôt source tant qu’il n’a pas été vérifié par rapport au code actuel. Utilisez plutôt le lanceur PowerShell depuis le dossier entièrement extrait.
+- L’exécutable Windows est publié dans [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/tag/v1.8.0-experimental). Le fichier `.exe` lui-même n’est pas stocké dans l’arborescence source.
 - Les prompts et le code transmis par le pont sont traités par AI Prime Tech. N’envoyez pas de code confidentiel sauf si vos règles l’autorisent.
 
 ## Prérequis

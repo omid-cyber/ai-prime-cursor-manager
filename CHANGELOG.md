@@ -6,7 +6,8 @@ All entries below reflect the code history provided with this repository; this i
 
 - Clearer dark-theme tabs and buttons: the selected tab is obvious, and hover no longer washes out the label.
 - The header status color now includes a matching dot.
-- Copyright notice for secocyber is shown in the window and documented in the READMEs.
+- Copyright notice for secocyber is shown in the window, the README title, and the other READMEs.
+- The Windows executable is published as a zip on the experimental GitHub Release.
 ## 1.7.0-alpha.1 — initial GitHub-ready snapshot
 
 - WPF/PowerShell desktop manager for AI Prime Tech key/model management.

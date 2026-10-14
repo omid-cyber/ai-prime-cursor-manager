@@ -1,6 +1,8 @@
-# AI Prime Cursor Manager برای ویندوز — نسخه آزمایشی
+# AI Prime Cursor Manager برای ویندوز — نسخه آزمایشی — Copyright © 2026 secocyber
 
-Copyright © 2026 secocyber. All rights reserved.
+**Copyright © 2026 secocyber. All rights reserved.**
+
+دانلود ویندوز: [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). فایل ZIP را باز کنید و `AIPrimeCursorManager.exe` را اجرا کنید.
 
 [English](README.md) | [Eesti](README.et.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | فارسی
 
@@ -25,7 +27,7 @@ Copyright © 2026 secocyber. All rights reserved.
 - **محدودیت Explore داخلی Cursor:** این پروژه محدودیت‌های خود Cursor را دور نمی‌زند. بسته به نسخه و تنظیمات Cursor، ممکن است نتوان مدل BYOK را جداگانه برای Explore Subagent داخلی انتخاب کرد.
 - **Cursor ریموت و localhost:** درخواست ریموت/ابری Cursor نمی‌تواند مستقیماً به `127.0.0.1` کامپیوتر تو وصل شود. تب Quick Tunnel آزمایشی یک HTTPS موقت برای تست ایجاد می‌کند. احراز هویت را حفظ کن و پس از آزمایش تونل را متوقف کن. از Bridge عمومی بدون احراز هویت استفاده نکن.
 - **اعتبارسنجی ویندوز:** محیط توسعه فعلی امکان اجرای WPF را ندارد. اجرای واقعی GUI، Start/Stop Bridge، پیشرفت دانلود و Cloudflare Quick Tunnel باید روی ویندوز بررسی شود.
-- فایل EXE از مخزن سورس کنار گذاشته شده تا زمانی که با سورس فعلی روی ویندوز اعتبارسنجی شود. فعلاً لانچر PowerShell را از پوشه استخراج‌شده اجرا کن.
+- فایل اجرایی ویندوز در [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/tag/v1.8.0-experimental) منتشر شده است. خود فایل `.exe` داخل درخت سورس نگهداری نمی‌شود.
 - promptها و قطعات کدی که از Bridge عبور می‌کنند برای پردازش به AI Prime Tech ارسال می‌شوند. کد محرمانه را بدون مجوز ارسال نکن.
 
 ## پیش‌نیازها

@@ -1,8 +1,16 @@
-# AI Prime Cursor Manager (Windows) — Experimental
+# AI Prime Cursor Manager (Windows) — Experimental — Copyright © 2026 secocyber
 
-Copyright © 2026 secocyber. All rights reserved.
+**Copyright © 2026 secocyber. All rights reserved.**
 
 English | [Eesti](README.et.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | [فارسی](README.fa.md)
+
+**AI Prime Cursor Manager** is a Windows desktop app by **secocyber** for **Cursor** and **AI Prime Tech**. It gives Cursor a local OpenAI-compatible bridge, shows the model catalog for an AI Prime Tech key, and can open an experimental Cloudflare Quick Tunnel. People looking for a Cursor custom model, an OpenAI base URL override, or a Windows AI Prime Tech bridge can start here.
+
+## Download the Windows app
+
+[Download AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). Unzip it and run `AIPrimeCursorManager.exe`.
+
+The download is an experimental Windows 10/11 build. Node.js 20+ must be installed for the local bridge. Copyright © 2026 secocyber. All rights reserved.
 
 **Status: experimental / alpha.** This project is a Windows utility for testing an authenticated local OpenAI-compatible bridge from Cursor to AI Prime Tech. The bridge and static tunnel-contract tests pass in the current development environment, but the complete WPF GUI and live Cloudflare Quick Tunnel have not been end-to-end validated on a clean Windows machine. Do not treat the current source as a production-ready release.
 
@@ -25,7 +33,7 @@ Some technical identifiers, model IDs, URLs, and provider responses remain in th
 - **Built-in Cursor Explore limitation:** this project cannot override Cursor product restrictions. Depending on Cursor version/configuration, a BYOK custom model may not be independently selectable for the built-in Explore Subagent.
 - **Remote Cursor and localhost:** a remote/cloud request cannot directly reach your computer's `127.0.0.1`. The experimental Quick Tunnel tab offers a temporary public HTTPS route for testing. Keep authentication enabled and stop the tunnel after use. Do not use an unauthenticated public bridge.
 - **Windows validation:** this development environment cannot run WPF. Real startup, Start/Stop Bridge, download progress, and Quick Tunnel must be verified by a Windows tester before making a stable release.
-- The prebuilt EXE is intentionally not tracked in the source repository until it can be verified against the current source. Run the PowerShell launcher from the full extracted folder instead.
+- The Windows executable is published as [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/tag/v1.8.0-experimental). The `.exe` file itself is not stored in the source tree.
 - Prompts and code sent through the bridge are processed by AI Prime Tech. Do not send confidential code unless permitted by your policies.
 
 ## Requirements
@@ -73,7 +81,7 @@ A manual GitHub Actions workflow creates a source-only ZIP and validates the ext
 
 The workflow reruns Node syntax checks, offline Bridge/Tunnel smoke tests and PowerShell/XAML preflight. It also extracts the ZIP into a fresh directory and repeats the checks against that copy.
 
-**This is a validated source bundle, not a compiled EXE or stable release.** The live WPF interface and real Cloudflare Quick Tunnel still require manual testing on Windows 10/11. No redistribution license has been selected; see `LICENSE-DECISION.md`.
+**This workflow builds a validated source bundle.** The Windows executable is the separate experimental download, [AIPrimeCursorManager-Windows.zip](https://github.com/omid-cyber/ai-prime-cursor-manager/releases/download/v1.8.0-experimental/AIPrimeCursorManager-Windows.zip). The live WPF interface and real Cloudflare Quick Tunnel still require manual testing on Windows 10/11. No redistribution license has been selected; see `LICENSE-DECISION.md`.
 
 ## Current project maturity
 
