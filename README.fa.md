@@ -1,5 +1,7 @@
 # AI Prime Cursor Manager برای ویندوز — نسخه آزمایشی
 
+Copyright © 2026 secocyber. All rights reserved.
+
 [English](README.md) | [Eesti](README.et.md) | [Français](README.fr.md) | [Deutsch](README.de.md) | فارسی
 
 **وضعیت: آزمایشی (Alpha).** این پروژه یک ابزار ویندوزی برای مدیریت یک Bridge محلی و احراز هویت‌شده بین Cursor و API سایت AI Prime Tech است. تست‌های Bridge و تست‌های ایستای Tunnel در محیط توسعه موفق بوده‌اند، اما رابط WPF و تونل واقعی Cloudflare هنوز روی یک ویندوز تمیز به‌صورت end-to-end تأیید نشده‌اند. این نسخه را محصول پایدار یا آماده استفاده حساس در نظر نگیرید.

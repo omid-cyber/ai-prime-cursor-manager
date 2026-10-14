@@ -1,5 +1,7 @@
 # AI Prime Cursor Manager (Windows) — expérimental
 
+Copyright © 2026 secocyber. All rights reserved.
+
 [English](README.md) | [Eesti](README.et.md) | Français | [Deutsch](README.de.md) | [فارسی](README.fa.md)
 
 **Statut : expérimental / alpha.** Ce projet est un outil Windows destiné à tester un pont local authentifié et compatible avec l’API OpenAI entre Cursor et AI Prime Tech. Le pont et les tests statiques du contrat du tunnel passent dans l’environnement de développement actuel, mais l’interface WPF complète et un véritable Cloudflare Quick Tunnel n’ont pas été validés de bout en bout sur une installation Windows propre. Ne considérez pas le code source actuel comme une version prête pour la production.

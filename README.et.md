@@ -1,5 +1,7 @@
 # AI Prime Cursor Manager (Windows) — eksperimentaalne
 
+Copyright © 2026 secocyber. All rights reserved.
+
 [English](README.md) | Eesti | [Français](README.fr.md) | [Deutsch](README.de.md) | [فارسی](README.fa.md)
 
 **Olek: eksperimentaalne / alpha.** See on Windowsi tööriist, millega saab katsetada Cursorist AI Prime Techi suunduvat autentimisega kohalikku OpenAI-ühilduvat silda. Sild ja tunneli staatilised lepingutestid läbivad praeguses arenduskeskkonnas kontrollid, kuid WPF-i graafilist kasutajaliidest tervikuna ega töötavat Cloudflare Quick Tunnelit pole puhtas Windowsi keskkonnas algusest lõpuni valideeritud. Ära käsitle praegust lähtekoodi tootmisvalmis väljalaskena.
